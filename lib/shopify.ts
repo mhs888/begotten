@@ -237,6 +237,26 @@ export async function fetchProduct(handle: string): Promise<ShopifyProduct | nul
   }
 }
 
+// Helper function to ensure URL uses Shopify store domain, not custom domain
+function ensureShopifyDomain(url: string | null | undefined): string | null {
+  if (!url || typeof url !== 'string') return null
+  
+  // Replace custom domain with Shopify store domain
+  // This ensures we always use a URL that Shopify controls
+  const shopifyStoreDomain = SHOPIFY_STORE_DOMAIN
+  
+  // If URL uses custom domain (begotten.shop or www.begotten.shop), replace with Shopify store domain
+  if (url.includes('begotten.shop')) {
+    // Replace the domain part, keeping the path
+    const urlObj = new URL(url)
+    const newUrl = url.replace(urlObj.hostname, shopifyStoreDomain)
+    console.log('Replaced custom domain URL:', url, '→', newUrl)
+    return newUrl
+  }
+  
+  return url
+}
+
 // Create a cart and add items, return checkout URL
 export async function createCartAndCheckout(items: Array<{ variantId: string; quantity: number }>): Promise<string | null> {
   if (!SHOPIFY_STORE_DOMAIN || !SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
@@ -290,6 +310,9 @@ export async function createCartAndCheckout(items: Array<{ variantId: string; qu
 
         const data = await response.json()
         
+        // Log full response for debugging
+        console.log('Full Shopify API response:', JSON.stringify(data, null, 2))
+        
         if (data.errors) {
           console.error('GraphQL errors:', data.errors)
           continue
@@ -301,30 +324,47 @@ export async function createCartAndCheckout(items: Array<{ variantId: string; qu
         }
 
         const cart = data.data?.cartCreate?.cart
+        if (!cart) {
+          console.error('No cart returned from API')
+          continue
+        }
+        
         const checkoutUrl = cart?.checkoutUrl
         const webUrl = cart?.webUrl
+        const cartId = cart?.id
         
-        console.log('Cart created - Checkout URL:', checkoutUrl)
-        console.log('Cart created - Web URL:', webUrl)
+        console.log('=== CART RESPONSE DEBUG ===')
+        console.log('Cart ID:', cartId)
+        console.log('Checkout URL:', checkoutUrl)
+        console.log('Web URL:', webUrl)
+        console.log('Checkout URL type:', typeof checkoutUrl)
+        console.log('Web URL type:', typeof webUrl)
         
         // Always prefer checkoutUrl if it's a valid HTTP URL
         // The checkoutUrl should be a direct checkout URL from Shopify
-        if (checkoutUrl && checkoutUrl.startsWith('http')) {
-          console.log('Using checkoutUrl:', checkoutUrl)
-          return checkoutUrl
+        if (checkoutUrl && typeof checkoutUrl === 'string' && checkoutUrl.startsWith('http')) {
+          const safeCheckoutUrl = ensureShopifyDomain(checkoutUrl)
+          if (safeCheckoutUrl) {
+            console.log('✅ Using checkoutUrl:', safeCheckoutUrl)
+            return safeCheckoutUrl
+          }
         }
         
         // Only use webUrl if it points to the Shopify store domain (not custom domain)
         // The webUrl might point to the custom domain's /cart which doesn't exist
-        if (webUrl && webUrl.includes('.myshopify.com')) {
-          console.log('Using webUrl (Shopify domain):', webUrl)
-          return webUrl
+        if (webUrl && typeof webUrl === 'string' && webUrl.startsWith('http')) {
+          const safeWebUrl = ensureShopifyDomain(webUrl)
+          if (safeWebUrl && safeWebUrl.includes('.myshopify.com')) {
+            console.log('✅ Using webUrl (Shopify domain):', safeWebUrl)
+            return safeWebUrl
+          }
         }
         
         // Last resort: redirect to Shopify store cart page (not custom domain)
         // This ensures we always go to a valid Shopify page
-        console.log('Using fallback: Shopify store cart page')
-        return `https://${SHOPIFY_STORE_DOMAIN}/cart`
+        const fallbackUrl = `https://${SHOPIFY_STORE_DOMAIN}/cart`
+        console.log('⚠️ Using fallback: Shopify store cart page:', fallbackUrl)
+        return fallbackUrl
       } catch (error) {
         console.error(`Error with API ${version}:`, error)
         continue
