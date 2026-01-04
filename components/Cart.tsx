@@ -69,21 +69,39 @@ export default function Cart({ isOpen, onClose }: CartProps) {
 
   const handleCheckout = async () => {
     setIsLoading(true)
-    // Redirect to Shopify checkout
     try {
-      // Build cart URL with items
-      const cartItems = items.map(item => {
-        // Extract variant ID from Shopify GID format
-        const variantId = item.variantId?.split('/').pop() || item.id.split('/').pop() || item.id
-        return `id=${variantId}&quantity=${item.quantity}`
-      }).join('&')
+      // Import the function to create cart
+      const { createCartAndCheckout } = await import('@/lib/shopify')
       
-      window.location.href = `https://6tfp84-zr.myshopify.com/cart/${cartItems ? '?' + cartItems : ''}`
+      // Prepare cart items with variant IDs
+      const cartItems = items
+        .filter(item => item.variantId) // Only include items with variant IDs
+        .map(item => ({
+          variantId: item.variantId!,
+          quantity: item.quantity
+        }))
+
+      if (cartItems.length === 0) {
+        console.error('No valid items in cart')
+        setIsLoading(false)
+        return
+      }
+
+      // Create cart and get checkout URL
+      const checkoutUrl = await createCartAndCheckout(cartItems)
+      
+      if (checkoutUrl) {
+        // Redirect to Shopify checkout
+        window.location.href = checkoutUrl
+      } else {
+        // Fallback: redirect to Shopify cart page
+        console.error('Failed to create cart, redirecting to cart page')
+        window.location.href = 'https://6tfp84-zr.myshopify.com/cart'
+      }
     } catch (error) {
       console.error('Checkout error:', error)
       // Fallback to cart page
       window.location.href = 'https://6tfp84-zr.myshopify.com/cart'
-    } finally {
       setIsLoading(false)
     }
   }

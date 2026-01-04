@@ -237,9 +237,81 @@ export async function fetchProduct(handle: string): Promise<ShopifyProduct | nul
   }
 }
 
-export async function addToCart(variantId: string, quantity: number = 1) {
-  // This will create a cart and add items
-  // Implementation depends on your Shopify setup
-  console.log('Add to cart:', variantId, quantity)
-  // TODO: Implement cart creation and item addition
+// Create a cart and add items, return checkout URL
+export async function createCartAndCheckout(items: Array<{ variantId: string; quantity: number }>): Promise<string | null> {
+  if (!SHOPIFY_STORE_DOMAIN || !SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
+    console.error('Shopify credentials not configured')
+    return null
+  }
+
+  const mutation = `
+    mutation cartCreate($cartInput: CartInput!) {
+      cartCreate(input: $cartInput) {
+        cart {
+          id
+          checkoutUrl
+        }
+        userErrors {
+          field
+          message
+        }
+      }
+    }
+  `
+
+  const variables = {
+    cartInput: {
+      lines: items.map(item => ({
+        merchandiseId: item.variantId,
+        quantity: item.quantity
+      }))
+    }
+  }
+
+  try {
+    const apiVersions = ['2025-01', '2024-10', '2024-07', '2024-04']
+    
+    for (const version of apiVersions) {
+      try {
+        const response = await fetch(`https://${SHOPIFY_STORE_DOMAIN}/api/${version}/graphql.json`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Shopify-Storefront-Access-Token': SHOPIFY_STOREFRONT_ACCESS_TOKEN,
+          },
+          body: JSON.stringify({
+            query: mutation,
+            variables
+          }),
+        })
+
+        if (!response.ok) continue
+
+        const data = await response.json()
+        
+        if (data.errors) {
+          console.error('GraphQL errors:', data.errors)
+          continue
+        }
+
+        if (data.data?.cartCreate?.userErrors?.length > 0) {
+          console.error('Cart creation errors:', data.data.cartCreate.userErrors)
+          continue
+        }
+
+        const checkoutUrl = data.data?.cartCreate?.cart?.checkoutUrl
+        if (checkoutUrl) {
+          return checkoutUrl
+        }
+      } catch (error) {
+        console.error(`Error with API ${version}:`, error)
+        continue
+      }
+    }
+    
+    return null
+  } catch (error) {
+    console.error('Error creating cart:', error)
+    return null
+  }
 }
