@@ -38,7 +38,7 @@ Vercel is made by the creators of Next.js and is the easiest way to deploy.
 6. **Add Environment Variables:**
    Click "Environment Variables" and add:
    - `NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN` = `6tfp84-zr.myshopify.com`
-   - `NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN` = `2dd81fc3944054a7f32d8dab48141af9`
+   - `NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN` = `YOUR_TOKEN_HERE`
 
 7. **Click "Deploy"**
 8. **Wait 2-3 minutes** for deployment to complete
