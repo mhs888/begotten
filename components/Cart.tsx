@@ -113,15 +113,18 @@ export default function Cart({ isOpen, onClose }: CartProps) {
           }
           
           console.log('✅ Redirecting to safe checkout URL:', safeUrl)
-          window.location.href = safeUrl
+          console.log('📍 Current window location before redirect:', window.location.href)
+          // Use window.location.replace to prevent back button issues
+          window.location.replace(safeUrl)
         } catch (urlError) {
           console.error('❌ Invalid or unsafe checkout URL:', safeUrl, urlError)
           // Fallback to Shopify store cart (always safe)
           // HARDCODE the Shopify store domain to ensure we never use custom domain
           const shopifyStoreDomain = '6tfp84-zr.myshopify.com'
-          const fallbackUrl = `https://${shopifyStoreDomain}/cart`
-          console.log('🔄 Using fallback URL (URL validation failed, hardcoded):', fallbackUrl)
-          window.location.href = fallbackUrl
+        const fallbackUrl = `https://${shopifyStoreDomain}/cart`
+        console.log('🔄 Using fallback URL (URL validation failed, hardcoded):', fallbackUrl)
+        console.log('📍 Current window location before redirect:', window.location.href)
+        window.location.replace(fallbackUrl)
         }
       } else {
         // Fallback: redirect to Shopify store cart page
@@ -130,7 +133,8 @@ export default function Cart({ isOpen, onClose }: CartProps) {
         const fallbackUrl = `https://${shopifyStoreDomain}/cart`
         console.error('❌ Failed to create cart via API, redirecting to Shopify cart page')
         console.log('🔄 Using fallback URL (hardcoded):', fallbackUrl)
-        window.location.href = fallbackUrl
+        console.log('📍 Current window location before redirect:', window.location.href)
+        window.location.replace(fallbackUrl)
       }
     } catch (error) {
       console.error('❌ Checkout error:', error)
@@ -139,7 +143,8 @@ export default function Cart({ isOpen, onClose }: CartProps) {
       const shopifyStoreDomain = '6tfp84-zr.myshopify.com'
       const fallbackUrl = `https://${shopifyStoreDomain}/cart`
       console.log('🔄 Using fallback URL (error handler, hardcoded):', fallbackUrl)
-      window.location.href = fallbackUrl
+      console.log('📍 Current window location before redirect:', window.location.href)
+      window.location.replace(fallbackUrl)
       setIsLoading(false)
     }
   }

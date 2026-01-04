@@ -336,7 +336,14 @@ export async function createCartAndCheckout(items: Array<{ variantId: string; qu
         console.log('Full Shopify API response:', JSON.stringify(data, null, 2))
         
         if (data.errors) {
-          console.error('GraphQL errors:', data.errors)
+          console.error('❌ GraphQL errors:', JSON.stringify(data.errors, null, 2))
+          // Log each error individually for clarity
+          data.errors.forEach((error: any, index: number) => {
+            console.error(`  Error ${index + 1}:`, error.message || error)
+            if (error.extensions) {
+              console.error(`  Extensions:`, JSON.stringify(error.extensions, null, 2))
+            }
+          })
           continue
         }
 
