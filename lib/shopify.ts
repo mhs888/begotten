@@ -307,36 +307,24 @@ export async function createCartAndCheckout(items: Array<{ variantId: string; qu
         console.log('Cart created - Checkout URL:', checkoutUrl)
         console.log('Cart created - Web URL:', webUrl)
         
-        if (checkoutUrl) {
-          // The checkoutUrl should be a direct checkout URL
-          // Format: https://checkout.shopify.com/... or https://your-store.myshopify.com/checkouts/...
-          
-          // If checkoutUrl is valid and contains 'checkout', use it
-          if (checkoutUrl.includes('checkout') || checkoutUrl.includes('checkouts')) {
-            return checkoutUrl
-          }
-          
-          // If checkoutUrl looks like a cart URL, use webUrl instead and append checkout
-          if (checkoutUrl.includes('/cart') || !checkoutUrl.startsWith('http')) {
-            // Use webUrl and redirect to checkout from there
-            if (webUrl) {
-              // The webUrl is the cart page, we need to go to checkout
-              // Redirect to cart page - Shopify will handle checkout from there
-              return webUrl
-            }
-          }
-          
-          // If it's a valid HTTP URL, use it
-          if (checkoutUrl.startsWith('http')) {
-            return checkoutUrl
-          }
+        // Always prefer checkoutUrl if it's a valid HTTP URL
+        // The checkoutUrl should be a direct checkout URL from Shopify
+        if (checkoutUrl && checkoutUrl.startsWith('http')) {
+          console.log('Using checkoutUrl:', checkoutUrl)
+          return checkoutUrl
         }
         
-        // Fallback: use webUrl if available
-        if (webUrl) {
-          console.log('Using webUrl as fallback:', webUrl)
+        // Only use webUrl if it points to the Shopify store domain (not custom domain)
+        // The webUrl might point to the custom domain's /cart which doesn't exist
+        if (webUrl && webUrl.includes('.myshopify.com')) {
+          console.log('Using webUrl (Shopify domain):', webUrl)
           return webUrl
         }
+        
+        // Last resort: redirect to Shopify store cart page (not custom domain)
+        // This ensures we always go to a valid Shopify page
+        console.log('Using fallback: Shopify store cart page')
+        return `https://${SHOPIFY_STORE_DOMAIN}/cart`
       } catch (error) {
         console.error(`Error with API ${version}:`, error)
         continue

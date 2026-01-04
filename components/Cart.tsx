@@ -92,20 +92,26 @@ export default function Cart({ isOpen, onClose }: CartProps) {
       
       if (checkoutUrl) {
         // The checkoutUrl from Shopify should go directly to checkout
-        // If it's redirecting to storefront, we need to ensure we're using the checkout URL correctly
         console.log('Redirecting to checkout:', checkoutUrl)
         
-        // Open checkout in same window (or new tab if preferred)
-        window.location.href = checkoutUrl
+        // Validate URL before redirecting
+        try {
+          new URL(checkoutUrl) // This will throw if URL is invalid
+          window.location.href = checkoutUrl
+        } catch (urlError) {
+          console.error('Invalid checkout URL:', checkoutUrl, urlError)
+          // Fallback to Shopify store cart
+          window.location.href = `https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || '6tfp84-zr.myshopify.com'}/cart`
+        }
       } else {
-        // Fallback: redirect to empty cart page - user can add items there
-        console.error('Failed to create cart via API, redirecting to cart page')
-        window.location.href = 'https://6tfp84-zr.myshopify.com/cart'
+        // Fallback: redirect to Shopify store cart page
+        console.error('Failed to create cart via API, redirecting to Shopify cart page')
+        window.location.href = `https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || '6tfp84-zr.myshopify.com'}/cart`
       }
     } catch (error) {
       console.error('Checkout error:', error)
-      // Fallback: redirect to Shopify cart page
-      window.location.href = 'https://6tfp84-zr.myshopify.com/cart'
+      // Fallback: redirect to Shopify cart page (not custom domain)
+      window.location.href = `https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || '6tfp84-zr.myshopify.com'}/cart`
       setIsLoading(false)
     }
   }
