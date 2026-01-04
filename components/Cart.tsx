@@ -90,23 +90,43 @@ export default function Cart({ isOpen, onClose }: CartProps) {
       // Create cart and get checkout URL
       const checkoutUrl = await createCartAndCheckout(cartItems)
       
+      console.log('🔍 Checkout URL received:', checkoutUrl)
+      
       if (checkoutUrl) {
-        // The checkoutUrl from Shopify should go directly to checkout
-        console.log('Redirecting to checkout:', checkoutUrl)
+        // CRITICAL: Never redirect to custom domain - always use Shopify store domain
+        let safeUrl = checkoutUrl
+        
+        // Replace custom domain with Shopify store domain if present
+        if (checkoutUrl.includes('begotten.shop')) {
+          const shopifyDomain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || '6tfp84-zr.myshopify.com'
+          safeUrl = checkoutUrl.replace(/https?:\/\/[^/]+/, `https://${shopifyDomain}`)
+          console.warn('⚠️ Replaced custom domain in checkout URL:', checkoutUrl, '→', safeUrl)
+        }
         
         // Validate URL before redirecting
         try {
-          new URL(checkoutUrl) // This will throw if URL is invalid
-          window.location.href = checkoutUrl
+          const url = new URL(safeUrl) // This will throw if URL is invalid
+          
+          // Double-check: never allow custom domain
+          if (url.hostname.includes('begotten.shop')) {
+            throw new Error('Custom domain detected in URL after sanitization')
+          }
+          
+          console.log('✅ Redirecting to safe checkout URL:', safeUrl)
+          window.location.href = safeUrl
         } catch (urlError) {
-          console.error('Invalid checkout URL:', checkoutUrl, urlError)
-          // Fallback to Shopify store cart
-          window.location.href = `https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || '6tfp84-zr.myshopify.com'}/cart`
+          console.error('❌ Invalid or unsafe checkout URL:', safeUrl, urlError)
+          // Fallback to Shopify store cart (always safe)
+          const fallbackUrl = `https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || '6tfp84-zr.myshopify.com'}/cart`
+          console.log('🔄 Using fallback URL:', fallbackUrl)
+          window.location.href = fallbackUrl
         }
       } else {
         // Fallback: redirect to Shopify store cart page
-        console.error('Failed to create cart via API, redirecting to Shopify cart page')
-        window.location.href = `https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || '6tfp84-zr.myshopify.com'}/cart`
+        console.error('❌ Failed to create cart via API, redirecting to Shopify cart page')
+        const fallbackUrl = `https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || '6tfp84-zr.myshopify.com'}/cart`
+        console.log('🔄 Using fallback URL:', fallbackUrl)
+        window.location.href = fallbackUrl
       }
     } catch (error) {
       console.error('Checkout error:', error)

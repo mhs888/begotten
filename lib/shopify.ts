@@ -247,11 +247,20 @@ function ensureShopifyDomain(url: string | null | undefined): string | null {
   
   // If URL uses custom domain (begotten.shop or www.begotten.shop), replace with Shopify store domain
   if (url.includes('begotten.shop')) {
-    // Replace the domain part, keeping the path
-    const urlObj = new URL(url)
-    const newUrl = url.replace(urlObj.hostname, shopifyStoreDomain)
-    console.log('Replaced custom domain URL:', url, '→', newUrl)
-    return newUrl
+    try {
+      // Replace the domain part, keeping the path and protocol
+      // Handle both www.begotten.shop and begotten.shop
+      const urlObj = new URL(url)
+      const newUrl = url.replace(urlObj.hostname, shopifyStoreDomain)
+      console.log('🔄 Replaced custom domain URL:', url, '→', newUrl)
+      return newUrl
+    } catch (e) {
+      console.error('Error parsing URL in ensureShopifyDomain:', url, e)
+      // If URL parsing fails, try simple string replacement
+      const newUrl = url.replace(/begotten\.shop/g, shopifyStoreDomain)
+      console.log('🔄 Replaced custom domain URL (fallback):', url, '→', newUrl)
+      return newUrl
+    }
   }
   
   return url
