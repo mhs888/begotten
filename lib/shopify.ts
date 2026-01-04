@@ -268,8 +268,12 @@ function ensureShopifyDomain(url: string | null | undefined): string | null {
 
 // Create a cart and add items, return checkout URL
 export async function createCartAndCheckout(items: Array<{ variantId: string; quantity: number }>): Promise<string | null> {
+  console.log('🚀 createCartAndCheckout called with items:', items)
+  console.log('🚀 Store domain:', SHOPIFY_STORE_DOMAIN)
+  console.log('🚀 Token present:', SHOPIFY_STOREFRONT_ACCESS_TOKEN ? 'Yes' : 'No')
+  
   if (!SHOPIFY_STORE_DOMAIN || !SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
-    console.error('Shopify credentials not configured')
+    console.error('❌ Shopify credentials not configured')
     return null
   }
 
@@ -303,7 +307,10 @@ export async function createCartAndCheckout(items: Array<{ variantId: string; qu
     
     for (const version of apiVersions) {
       try {
-        const response = await fetch(`https://${SHOPIFY_STORE_DOMAIN}/api/${version}/graphql.json`, {
+        const apiUrl = `https://${SHOPIFY_STORE_DOMAIN}/api/${version}/graphql.json`
+        console.log(`📡 Attempting API call to ${apiUrl} with version ${version}`)
+        
+        const response = await fetch(apiUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -315,7 +322,13 @@ export async function createCartAndCheckout(items: Array<{ variantId: string; qu
           }),
         })
 
-        if (!response.ok) continue
+        console.log(`📡 API ${version} response status:`, response.status, response.statusText)
+        
+        if (!response.ok) {
+          const errorText = await response.text()
+          console.error(`❌ API ${version} failed:`, response.status, errorText)
+          continue
+        }
 
         const data = await response.json()
         
@@ -375,11 +388,21 @@ export async function createCartAndCheckout(items: Array<{ variantId: string; qu
         console.log('⚠️ Using fallback: Shopify store cart page:', fallbackUrl)
         return fallbackUrl
       } catch (error) {
-        console.error(`Error with API ${version}:`, error)
+        console.error(`❌ Error with API ${version}:`, error)
+        // Log the full error for debugging
+        if (error instanceof Error) {
+          console.error(`Error message: ${error.message}`)
+          console.error(`Error stack: ${error.stack}`)
+        }
         continue
       }
     }
     
+    // If all API versions failed, log why and return null
+    console.error('❌ All API versions failed. Check:')
+    console.error('  - Store domain:', SHOPIFY_STORE_DOMAIN)
+    console.error('  - Token present:', SHOPIFY_STOREFRONT_ACCESS_TOKEN ? 'Yes' : 'No')
+    console.error('  - Items being sent:', items)
     return null
   } catch (error) {
     console.error('Error creating cart:', error)

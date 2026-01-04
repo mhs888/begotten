@@ -117,21 +117,29 @@ export default function Cart({ isOpen, onClose }: CartProps) {
         } catch (urlError) {
           console.error('❌ Invalid or unsafe checkout URL:', safeUrl, urlError)
           // Fallback to Shopify store cart (always safe)
-          const fallbackUrl = `https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || '6tfp84-zr.myshopify.com'}/cart`
-          console.log('🔄 Using fallback URL:', fallbackUrl)
+          // HARDCODE the Shopify store domain to ensure we never use custom domain
+          const shopifyStoreDomain = '6tfp84-zr.myshopify.com'
+          const fallbackUrl = `https://${shopifyStoreDomain}/cart`
+          console.log('🔄 Using fallback URL (URL validation failed, hardcoded):', fallbackUrl)
           window.location.href = fallbackUrl
         }
       } else {
         // Fallback: redirect to Shopify store cart page
+        // HARDCODE the Shopify store domain to ensure we never use custom domain
+        const shopifyStoreDomain = '6tfp84-zr.myshopify.com'
+        const fallbackUrl = `https://${shopifyStoreDomain}/cart`
         console.error('❌ Failed to create cart via API, redirecting to Shopify cart page')
-        const fallbackUrl = `https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || '6tfp84-zr.myshopify.com'}/cart`
-        console.log('🔄 Using fallback URL:', fallbackUrl)
+        console.log('🔄 Using fallback URL (hardcoded):', fallbackUrl)
         window.location.href = fallbackUrl
       }
     } catch (error) {
-      console.error('Checkout error:', error)
+      console.error('❌ Checkout error:', error)
       // Fallback: redirect to Shopify cart page (not custom domain)
-      window.location.href = `https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || '6tfp84-zr.myshopify.com'}/cart`
+      // HARDCODE the Shopify store domain to ensure we never use custom domain
+      const shopifyStoreDomain = '6tfp84-zr.myshopify.com'
+      const fallbackUrl = `https://${shopifyStoreDomain}/cart`
+      console.log('🔄 Using fallback URL (error handler, hardcoded):', fallbackUrl)
+      window.location.href = fallbackUrl
       setIsLoading(false)
     }
   }
