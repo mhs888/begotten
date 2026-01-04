@@ -304,22 +304,32 @@ export async function createCartAndCheckout(items: Array<{ variantId: string; qu
         
         if (checkoutUrl) {
           // The checkoutUrl should go directly to checkout
-          // If it contains '/cart' or redirects to storefront, we need to fix it
           console.log('Checkout URL from API:', checkoutUrl)
           
-          // Ensure we're using the checkout URL directly (not cart URL)
-          // The checkoutUrl should be like: https://checkout.shopify.com/... or https://your-store.myshopify.com/checkouts/...
-          if (checkoutUrl.includes('/cart')) {
-            // If it's a cart URL, build checkout URL from cart ID
+          // Validate the checkout URL format
+          // Should be: https://checkout.shopify.com/... or https://your-store.myshopify.com/checkouts/...
+          if (checkoutUrl.includes('/cart') || checkoutUrl.includes('myshopify.com/cart')) {
+            // If it's a cart URL, we need to use the cart web URL instead
             const cartId = cart?.id
             if (cartId) {
               // Extract cart token from cart ID (gid://shopify/Cart/abc123 -> abc123)
               const cartToken = cartId.split('/').pop()
+              // Use the web URL format for checkout
               return `https://${SHOPIFY_STORE_DOMAIN}/cart/${cartToken}:checkout`
             }
+            // Fallback: return the URL as-is but log warning
+            console.warn('Checkout URL appears to be a cart URL:', checkoutUrl)
+            return checkoutUrl
           }
           
-          return checkoutUrl
+          // Return the checkout URL if it looks valid
+          if (checkoutUrl.includes('checkout') || checkoutUrl.includes('checkouts')) {
+            return checkoutUrl
+          }
+          
+          // If URL doesn't look right, log and return null to use fallback
+          console.error('Invalid checkout URL format:', checkoutUrl)
+          return null
         }
       } catch (error) {
         console.error(`Error with API ${version}:`, error)

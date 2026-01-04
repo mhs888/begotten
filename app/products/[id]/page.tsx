@@ -77,35 +77,82 @@ export default function ProductPage() {
     }
   }, [productId])
 
+  // Extract size and color options from variants (needed before useEffect)
+  const sizes = Array.from(new Set(variants.map((v: any) => {
+    const parts = v.title.split(' / ')
+    return parts[parts.length - 1] // Last part is usually size
+  }))).filter(Boolean)
+
+  const colors = Array.from(new Set(variants.map((v: any) => {
+    const parts = v.title.split(' / ')
+    return parts[0] // First part is usually color
+  }))).filter(Boolean)
+
   // Update variant when size/color changes - MUST be before early returns
   useEffect(() => {
-    if (!product || variants.length === 0) return
+    if (!product || variants.length === 0) {
+      setSelectedVariant(null)
+      return
+    }
     
-    if (selectedSize && selectedColor) {
-      const variant = variants.find((v: any) => {
-        const parts = v.title.split(' / ')
-        const variantColor = parts[0]
-        const variantSize = parts[parts.length - 1]
-        return variantColor === selectedColor && variantSize === selectedSize
-      })
-      if (variant && variant.availableForSale !== false) {
-        setSelectedVariant(variant)
-      } else if (variant) {
-        // Variant exists but is not available
-        setSelectedVariant(variant)
+    // Only set variant if both color and size are selected (if product has variants)
+    if (colors.length > 0 && sizes.length > 0) {
+      if (selectedSize && selectedColor) {
+        const variant = variants.find((v: any) => {
+          const parts = v.title.split(' / ')
+          const variantColor = parts[0]
+          const variantSize = parts[parts.length - 1]
+          return variantColor === selectedColor && variantSize === selectedSize
+        })
+        if (variant && variant.availableForSale !== false) {
+          setSelectedVariant(variant)
+        } else if (variant) {
+          // Variant exists but is not available
+          setSelectedVariant(variant)
+        } else {
+          // No variant found for this combination
+          setSelectedVariant(null)
+        }
+      } else {
+        // Don't set variant if color or size is missing
+        setSelectedVariant(null)
       }
-    } else if (selectedSize || selectedColor) {
-      // Find first available variant matching the selection
-      const variant = variants.find((v: any) => {
-        const parts = v.title.split(' / ')
-        const variantColor = parts[0]
-        const variantSize = parts[parts.length - 1]
-        const matches = (selectedSize && variantSize === selectedSize) ||
-                       (selectedColor && variantColor === selectedColor)
-        return matches && v.availableForSale !== false
-      })
-      if (variant) {
-        setSelectedVariant(variant)
+    } else if (colors.length > 0) {
+      // Only colors, no sizes
+      if (selectedColor) {
+        const variant = variants.find((v: any) => {
+          const parts = v.title.split(' / ')
+          const variantColor = parts[0]
+          return variantColor === selectedColor && v.availableForSale !== false
+        })
+        if (variant) {
+          setSelectedVariant(variant)
+        } else {
+          setSelectedVariant(null)
+        }
+      } else {
+        setSelectedVariant(null)
+      }
+    } else if (sizes.length > 0) {
+      // Only sizes, no colors
+      if (selectedSize) {
+        const variant = variants.find((v: any) => {
+          const parts = v.title.split(' / ')
+          const variantSize = parts[parts.length - 1]
+          return variantSize === selectedSize && v.availableForSale !== false
+        })
+        if (variant) {
+          setSelectedVariant(variant)
+        } else {
+          setSelectedVariant(null)
+        }
+      } else {
+        setSelectedVariant(null)
+      }
+    } else {
+      // No variants, use first available
+      if (variants.length > 0 && variants[0].availableForSale !== false) {
+        setSelectedVariant(variants[0])
       }
     }
   }, [selectedSize, selectedColor, variants, product])
@@ -227,17 +274,6 @@ export default function ProductPage() {
     ? parseFloat(selectedVariant.price.amount)
     : parseFloat(product.priceRange?.minVariantPrice?.amount || '0')
 
-  // Extract size and color options from variants
-  const sizes = Array.from(new Set(variants.map((v: any) => {
-    const parts = v.title.split(' / ')
-    return parts[parts.length - 1] // Last part is usually size
-  }))).filter(Boolean)
-
-  const colors = Array.from(new Set(variants.map((v: any) => {
-    const parts = v.title.split(' / ')
-    return parts[0] // First part is usually color
-  }))).filter(Boolean)
-
   // Check if a size/color combination is available
   const isVariantAvailable = (color: string, size: string) => {
     const variant = variants.find((v: any) => {
@@ -279,7 +315,21 @@ export default function ProductPage() {
     : colors
 
   const handleAddToCart = () => {
-    if (!selectedVariant) return
+    // Require both color and size to be selected (if product has variants)
+    if (colors.length > 0 && !selectedColor) {
+      alert('Please select a color')
+      return
+    }
+    
+    if (sizes.length > 0 && !selectedSize) {
+      alert('Please select a size')
+      return
+    }
+    
+    if (!selectedVariant) {
+      alert('Please select a color and size')
+      return
+    }
     
     // Add multiple quantities
     for (let i = 0; i < quantity; i++) {
@@ -294,6 +344,16 @@ export default function ProductPage() {
     
     // Show notification or open cart
     window.dispatchEvent(new CustomEvent('cartUpdated'))
+  }
+  
+  // Check if both color and size are selected (if required)
+  const canAddToCart = () => {
+    if (!selectedVariant) return false
+    if (colors.length > 0 && !selectedColor) return false
+    if (sizes.length > 0 && !selectedSize) return false
+    if (!selectedVariant.availableForSale) return false
+    if (selectedVariant.quantityAvailable !== null && selectedVariant.quantityAvailable <= 0) return false
+    return true
   }
 
   return (
@@ -504,10 +564,10 @@ export default function ProductPage() {
             {/* Add to Cart */}
             <button
               onClick={handleAddToCart}
-              disabled={!selectedVariant || !selectedVariant.availableForSale || (selectedVariant.quantityAvailable !== null && selectedVariant.quantityAvailable <= 0)}
+              disabled={!canAddToCart()}
               className="w-full bg-black text-white py-4 text-sm uppercase tracking-wide hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {!selectedVariant 
+              {!selectedVariant || (colors.length > 0 && !selectedColor) || (sizes.length > 0 && !selectedSize)
                 ? 'Select Size & Color' 
                 : !selectedVariant.availableForSale || (selectedVariant.quantityAvailable !== null && selectedVariant.quantityAvailable <= 0)
                   ? 'Out of Stock'
