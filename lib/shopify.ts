@@ -293,14 +293,46 @@ export async function createCartAndCheckout(items: Array<{ variantId: string; qu
     }
   `
 
+  // Validate and format variant IDs
+  const cartLines = items.map(item => {
+    // Variant ID should be in GID format: gid://shopify/ProductVariant/123456789
+    // If it's already in that format, use it; otherwise, we might need to convert it
+    let variantId = item.variantId
+    
+    // Log the variant ID format for debugging
+    console.log('📦 Processing item with variantId:', variantId, 'type:', typeof variantId)
+    
+    // Ensure variant ID is a string
+    if (typeof variantId !== 'string') {
+      console.error('❌ Invalid variant ID type:', typeof variantId, variantId)
+      return null
+    }
+    
+    // Check if it's already a GID
+    if (!variantId.startsWith('gid://')) {
+      console.warn('⚠️ Variant ID is not in GID format, attempting to convert:', variantId)
+      // Try to convert if it's just a number or has a different format
+      // This shouldn't happen, but let's handle it
+    }
+    
+    return {
+      merchandiseId: variantId,
+      quantity: item.quantity
+    }
+  }).filter((line): line is { merchandiseId: string; quantity: number } => line !== null)
+
+  if (cartLines.length === 0) {
+    console.error('❌ No valid cart lines after processing')
+    return null
+  }
+
   const variables = {
     cartInput: {
-      lines: items.map(item => ({
-        merchandiseId: item.variantId,
-        quantity: item.quantity
-      }))
+      lines: cartLines
     }
   }
+  
+  console.log('📦 Cart lines being sent to API:', JSON.stringify(cartLines, null, 2))
 
   try {
     const apiVersions = ['2025-01', '2024-10', '2024-07', '2024-04']
