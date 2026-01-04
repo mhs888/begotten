@@ -299,8 +299,26 @@ export async function createCartAndCheckout(items: Array<{ variantId: string; qu
           continue
         }
 
-        const checkoutUrl = data.data?.cartCreate?.cart?.checkoutUrl
+        const cart = data.data?.cartCreate?.cart
+        const checkoutUrl = cart?.checkoutUrl
+        
         if (checkoutUrl) {
+          // The checkoutUrl should go directly to checkout
+          // If it contains '/cart' or redirects to storefront, we need to fix it
+          console.log('Checkout URL from API:', checkoutUrl)
+          
+          // Ensure we're using the checkout URL directly (not cart URL)
+          // The checkoutUrl should be like: https://checkout.shopify.com/... or https://your-store.myshopify.com/checkouts/...
+          if (checkoutUrl.includes('/cart')) {
+            // If it's a cart URL, build checkout URL from cart ID
+            const cartId = cart?.id
+            if (cartId) {
+              // Extract cart token from cart ID (gid://shopify/Cart/abc123 -> abc123)
+              const cartToken = cartId.split('/').pop()
+              return `https://${SHOPIFY_STORE_DOMAIN}/cart/${cartToken}:checkout`
+            }
+          }
+          
           return checkoutUrl
         }
       } catch (error) {

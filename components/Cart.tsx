@@ -91,16 +91,29 @@ export default function Cart({ isOpen, onClose }: CartProps) {
       const checkoutUrl = await createCartAndCheckout(cartItems)
       
       if (checkoutUrl) {
-        // Redirect to Shopify checkout
+        // The checkoutUrl from Shopify should go directly to checkout
+        // If it's redirecting to storefront, we need to ensure we're using the checkout URL correctly
+        console.log('Redirecting to checkout:', checkoutUrl)
+        
+        // Open checkout in same window (or new tab if preferred)
         window.location.href = checkoutUrl
       } else {
-        // Fallback: redirect to Shopify cart page
-        console.error('Failed to create cart, redirecting to cart page')
-        window.location.href = 'https://6tfp84-zr.myshopify.com/cart'
+        // Fallback: build cart URL manually and redirect
+        console.error('Failed to create cart via API, using fallback method')
+        const cartParams = cartItems.map(item => {
+          // Extract variant ID number from GID format (gid://shopify/ProductVariant/123456)
+          const variantId = item.variantId.includes('/') 
+            ? item.variantId.split('/').pop() 
+            : item.variantId
+          return `${variantId}:${item.quantity}`
+        }).join(',')
+        
+        // Redirect to Shopify checkout with items
+        window.location.href = `https://6tfp84-zr.myshopify.com/cart/${cartParams}`
       }
     } catch (error) {
       console.error('Checkout error:', error)
-      // Fallback to cart page
+      // Fallback: redirect to Shopify cart page
       window.location.href = 'https://6tfp84-zr.myshopify.com/cart'
       setIsLoading(false)
     }
