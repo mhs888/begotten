@@ -169,7 +169,7 @@ export default function ProductPage() {
   // Filter images based on selected color
   const getColorImages = () => {
     if (!selectedColor) {
-      return allImages.map(img => img.url)
+      return allImages.map((img: { url: string; altText: string }) => img.url)
     }
     
     const colorLower = selectedColor.toLowerCase().trim()
@@ -180,7 +180,7 @@ export default function ProductPage() {
     if (colorLower === 'gray') colorVariations.push('grey')
     
     // Try to find images that match the color in alt text
-    const colorImages = allImages.filter(img => {
+    const colorImages = allImages.filter((img: { url: string; altText: string }) => {
       const altText = img.altText.toLowerCase().trim()
       // Check if alt text contains any color variation
       return colorVariations.some(color => altText.includes(color))
@@ -188,7 +188,7 @@ export default function ProductPage() {
     
     if (colorImages.length > 0) {
       // Sort images: front first, then back
-      const sortedImages = colorImages.sort((a, b) => {
+      const sortedImages = colorImages.sort((a: { url: string; altText: string }, b: { url: string; altText: string }) => {
         const aIsBack = a.altText.includes('back') || a.altText.includes('rear')
         const bIsBack = b.altText.includes('back') || b.altText.includes('rear')
         if (aIsBack && !bIsBack) return 1
@@ -196,14 +196,14 @@ export default function ProductPage() {
         return 0
       })
       
-      return sortedImages.map(img => img.url)
+      return sortedImages.map((img: { url: string; altText: string }) => img.url)
     }
     
     // If variant has its own image, use that
     if (selectedVariant?.image?.url) {
       const variantImage = selectedVariant.image.url
       // Try to find a matching back image
-      const backImage = allImages.find(img => {
+      const backImage = allImages.find((img: { url: string; altText: string }) => {
         const altText = img.altText.toLowerCase().trim()
         return img.url !== variantImage && 
                (altText.includes('back') || altText.includes('rear')) &&
@@ -218,7 +218,7 @@ export default function ProductPage() {
     }
     
     // Fallback: use all images
-    return allImages.map(img => img.url)
+    return allImages.map((img: { url: string; altText: string }) => img.url)
   }
   
   const images = getColorImages()

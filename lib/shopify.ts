@@ -6,6 +6,7 @@ export interface ShopifyProduct {
   title: string
   description: string
   price: string
+  handle?: string
   images: {
     edges: Array<{
       node: {
@@ -24,6 +25,11 @@ export interface ShopifyProduct {
           currencyCode: string
         }
         availableForSale: boolean
+        quantityAvailable?: number | null
+        image?: {
+          url: string
+          altText: string | null
+        }
       }
     }>
   }
