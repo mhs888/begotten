@@ -250,6 +250,7 @@ export async function createCartAndCheckout(items: Array<{ variantId: string; qu
         cart {
           id
           checkoutUrl
+          webUrl
         }
         userErrors {
           field
@@ -301,35 +302,40 @@ export async function createCartAndCheckout(items: Array<{ variantId: string; qu
 
         const cart = data.data?.cartCreate?.cart
         const checkoutUrl = cart?.checkoutUrl
+        const webUrl = cart?.webUrl
+        
+        console.log('Cart created - Checkout URL:', checkoutUrl)
+        console.log('Cart created - Web URL:', webUrl)
         
         if (checkoutUrl) {
-          // The checkoutUrl should go directly to checkout
-          console.log('Checkout URL from API:', checkoutUrl)
+          // The checkoutUrl should be a direct checkout URL
+          // Format: https://checkout.shopify.com/... or https://your-store.myshopify.com/checkouts/...
           
-          // Validate the checkout URL format
-          // Should be: https://checkout.shopify.com/... or https://your-store.myshopify.com/checkouts/...
-          if (checkoutUrl.includes('/cart') || checkoutUrl.includes('myshopify.com/cart')) {
-            // If it's a cart URL, we need to use the cart web URL instead
-            const cartId = cart?.id
-            if (cartId) {
-              // Extract cart token from cart ID (gid://shopify/Cart/abc123 -> abc123)
-              const cartToken = cartId.split('/').pop()
-              // Use the web URL format for checkout
-              return `https://${SHOPIFY_STORE_DOMAIN}/cart/${cartToken}:checkout`
-            }
-            // Fallback: return the URL as-is but log warning
-            console.warn('Checkout URL appears to be a cart URL:', checkoutUrl)
-            return checkoutUrl
-          }
-          
-          // Return the checkout URL if it looks valid
+          // If checkoutUrl is valid and contains 'checkout', use it
           if (checkoutUrl.includes('checkout') || checkoutUrl.includes('checkouts')) {
             return checkoutUrl
           }
           
-          // If URL doesn't look right, log and return null to use fallback
-          console.error('Invalid checkout URL format:', checkoutUrl)
-          return null
+          // If checkoutUrl looks like a cart URL, use webUrl instead and append checkout
+          if (checkoutUrl.includes('/cart') || !checkoutUrl.startsWith('http')) {
+            // Use webUrl and redirect to checkout from there
+            if (webUrl) {
+              // The webUrl is the cart page, we need to go to checkout
+              // Redirect to cart page - Shopify will handle checkout from there
+              return webUrl
+            }
+          }
+          
+          // If it's a valid HTTP URL, use it
+          if (checkoutUrl.startsWith('http')) {
+            return checkoutUrl
+          }
+        }
+        
+        // Fallback: use webUrl if available
+        if (webUrl) {
+          console.log('Using webUrl as fallback:', webUrl)
+          return webUrl
         }
       } catch (error) {
         console.error(`Error with API ${version}:`, error)
