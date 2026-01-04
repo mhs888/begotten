@@ -98,7 +98,7 @@ export default function Cart({ isOpen, onClose }: CartProps) {
         
         // Replace custom domain with Shopify store domain if present
         if (checkoutUrl.includes('begotten.shop')) {
-          const shopifyDomain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || '6tfp84-zr.myshopify.com'
+          const shopifyDomain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || 'bgttn.myshopify.com'
           safeUrl = checkoutUrl.replace(/https?:\/\/[^/]+/, `https://${shopifyDomain}`)
           console.warn('⚠️ Replaced custom domain in checkout URL:', checkoutUrl, '→', safeUrl)
         }
@@ -120,7 +120,7 @@ export default function Cart({ isOpen, onClose }: CartProps) {
           console.error('❌ Invalid or unsafe checkout URL:', safeUrl, urlError)
           // Fallback to Shopify store cart (always safe)
           // HARDCODE the Shopify store domain to ensure we never use custom domain
-          const shopifyStoreDomain = '6tfp84-zr.myshopify.com'
+          const shopifyStoreDomain = 'bgttn.myshopify.com'
         const fallbackUrl = `https://${shopifyStoreDomain}/cart`
         console.log('🔄 Using fallback URL (URL validation failed, hardcoded):', fallbackUrl)
         console.log('📍 Current window location before redirect:', window.location.href)
