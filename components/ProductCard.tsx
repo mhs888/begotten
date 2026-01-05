@@ -109,7 +109,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
       {/* Product Info - Minimal YSL Style */}
       <div className="text-center">
-        <h3 className="text-sm font-light text-black uppercase tracking-wide">
+        <h3 className="text-sm font-display font-medium text-black uppercase tracking-wide">
           {product.name}
         </h3>
       </div>

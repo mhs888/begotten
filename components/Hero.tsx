@@ -50,7 +50,7 @@ export default function Hero() {
                   onError={() => setLogoError(true)}
                 />
               ) : (
-                <div className="text-4xl md:text-5xl lg:text-6xl font-light tracking-wider text-black">
+                <div className="text-4xl md:text-5xl lg:text-6xl font-display font-semibold tracking-wider text-black">
                   BEGOTTEN
                 </div>
               )}
