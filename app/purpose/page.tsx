@@ -128,7 +128,7 @@ export default function PurposePage() {
             className="mb-12"
             style={getSectionStyle('back', 0)}
           >
-            <Link href="/" className="text-base font-display text-gray-500 hover:text-black uppercase tracking-wide">
+            <Link href="/" className="text-base font-display text-black hover:text-gray-600 uppercase tracking-wide">
               ← Back to Home
             </Link>
           </div>
@@ -338,7 +338,7 @@ export default function PurposePage() {
             </p>
             <Link 
               href="/" 
-              className="inline-block bg-black text-white px-8 py-3 text-sm font-display uppercase tracking-wide hover:bg-gray-800 transition-colors"
+              className="inline-block bg-black text-white px-12 py-4 text-base md:text-lg font-display uppercase tracking-wide hover:bg-gray-800 transition-colors"
             >
               Shop Now
             </Link>
