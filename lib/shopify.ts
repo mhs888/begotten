@@ -286,7 +286,6 @@ export async function createCartAndCheckout(items: Array<{ variantId: string; qu
         cart {
           id
           checkoutUrl
-          webUrl
         }
         userErrors {
           field
