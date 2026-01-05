@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Cart from './Cart'
 
@@ -9,8 +9,6 @@ export default function Hero() {
   const [logoError, setLogoError] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
   const [cartCount, setCartCount] = useState(0)
-  const [opacity, setOpacity] = useState(1)
-  const textRef = useRef<HTMLHeadingElement>(null)
 
   useEffect(() => {
     const updateCartCount = () => {
@@ -44,51 +42,6 @@ export default function Hero() {
     }
   }, [])
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!textRef.current) return
-      
-      const rect = textRef.current.getBoundingClientRect()
-      const windowHeight = window.innerHeight
-      
-      // Calculate opacity based on element's position in viewport
-      // When element is in center of viewport: opacity = 1
-      // As it moves up and out of view: opacity decreases
-      // When element is above viewport: opacity = 0
-      
-      // Element center position relative to viewport
-      const elementCenter = rect.top + rect.height / 2
-      const viewportCenter = windowHeight / 2
-      
-      // Distance from viewport center (positive = below center, negative = above center)
-      const distanceFromCenter = elementCenter - viewportCenter
-      
-      // Fade starts when element is 200px above center, fully faded at 400px above center
-      const fadeStart = -200
-      const fadeEnd = -400
-      const fadeRange = fadeEnd - fadeStart
-      
-      let newOpacity = 1
-      if (distanceFromCenter < fadeStart) {
-        // Start fading
-        const fadeProgress = Math.max(0, Math.min(1, (distanceFromCenter - fadeStart) / fadeRange))
-        newOpacity = 1 - fadeProgress
-      }
-      
-      setOpacity(newOpacity)
-    }
-
-    // Set initial opacity
-    handleScroll()
-    
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    window.addEventListener('resize', handleScroll, { passive: true })
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-      window.removeEventListener('resize', handleScroll)
-    }
-  }, [])
   
   return (
     <div className="relative bg-white">
@@ -152,25 +105,6 @@ export default function Hero() {
 
       {/* Spacer for fixed nav */}
       <div className="pt-36"></div>
-
-      {/* Hero Text Section */}
-      <div 
-        id="hero-text-section"
-        className="pt-32 pb-8 px-6 lg:px-8 flex items-center justify-center"
-      >
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 
-            ref={textRef}
-            className="text-3xl md:text-4xl lg:text-5xl font-display tracking-wide uppercase text-black"
-            style={{
-              opacity: opacity,
-              transition: 'opacity 0.1s ease-out'
-            }}
-          >
-            Divine Garments With a Higher Purpose
-          </h1>
-        </div>
-      </div>
     </div>
   )
 }
