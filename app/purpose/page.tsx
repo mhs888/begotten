@@ -340,7 +340,7 @@ export default function PurposePage() {
             style={getSectionStyle('scripture', 0.5)}
           >
             <p className="text-lg md:text-xl text-gray-700 italic leading-relaxed mb-4">
-              &ldquo;Truly I tell you, whatever you did for one of the least of these brothers and sisters of mine, you did for me.&rdquo;
+              &ldquo;Truly I tell you, whatever you did for one of the least of these brothers and sisters of mine, you did for <strong className="not-italic">me</strong>.&rdquo;
             </p>
             <p className="text-sm text-gray-600 mb-8">
               Matthew 25:40
