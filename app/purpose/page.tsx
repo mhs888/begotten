@@ -7,7 +7,7 @@ import { fetchProducts } from '@/lib/shopify'
 
 export default function PurposePage() {
   const [images, setImages] = useState<string[]>([])
-  const [visibleSections, setVisibleSections] = useState<{ [key: string]: boolean }>({})
+  const [scrollY, setScrollY] = useState(0)
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({})
 
   // Load images for scrolling band
@@ -40,31 +40,59 @@ export default function PurposePage() {
     }
   }, [])
 
-  // Scroll animation observer
+  // Continuous scroll tracking for interactive animations
   useEffect(() => {
-    const observers: IntersectionObserver[] = []
-    
-    Object.keys(sectionRefs.current).forEach((key) => {
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            setVisibleSections((prev) => ({ ...prev, [key]: true }))
-            observer.disconnect()
-          }
-        },
-        { threshold: 0.1, rootMargin: '0px 0px -100px 0px' }
-      )
-      
-      if (sectionRefs.current[key]) {
-        observer.observe(sectionRefs.current[key]!)
-        observers.push(observer)
-      }
-    })
+    const handleScroll = () => {
+      setScrollY(window.scrollY)
+    }
+
+    handleScroll() // Set initial value
+    window.addEventListener('scroll', handleScroll, { passive: true })
     
     return () => {
-      observers.forEach((obs) => obs.disconnect())
+      window.removeEventListener('scroll', handleScroll)
     }
   }, [])
+
+  // Calculate animation values based on scroll position
+  const getSectionStyle = (key: string, offset: number = 0) => {
+    const element = sectionRefs.current[key]
+    if (!element) {
+      return { opacity: 0, transform: 'translateY(50px)' }
+    }
+
+    const rect = element.getBoundingClientRect()
+    const windowHeight = window.innerHeight
+    const elementTop = rect.top
+    const elementCenter = rect.top + rect.height / 2
+    
+    // Calculate progress: 0 when element is below viewport, 1 when centered, 0 when above
+    let progress = 0
+    
+    if (elementTop < windowHeight && elementTop > -rect.height) {
+      // Element is in or near viewport
+      const distanceFromCenter = elementCenter - windowHeight / 2
+      const maxDistance = windowHeight / 2 + rect.height / 2
+      progress = 1 - Math.abs(distanceFromCenter) / maxDistance
+      progress = Math.max(0, Math.min(1, progress))
+    } else if (elementTop < -rect.height) {
+      // Element is above viewport - fully visible
+      progress = 1
+    }
+    
+    // Apply offset for staggered effect
+    const adjustedProgress = Math.max(0, Math.min(1, progress + offset))
+    
+    // Opacity and transform based on progress
+    const opacity = Math.max(0, Math.min(1, adjustedProgress * 1.2 - 0.2)) // Fade in faster
+    const translateY = (1 - adjustedProgress) * 50 // Move from 50px below to 0
+    
+    return {
+      opacity,
+      transform: `translateY(${translateY}px)`,
+      transition: 'opacity 0.1s ease-out, transform 0.1s ease-out'
+    }
+  }
 
   const setSectionRef = (key: string) => (el: HTMLDivElement | null) => {
     sectionRefs.current[key] = el
@@ -98,11 +126,8 @@ export default function PurposePage() {
           {/* Back Button */}
           <div 
             ref={setSectionRef('back')}
-            className={`mb-12 transition-all duration-1000 ${
-              visibleSections.back 
-                ? 'opacity-100 translate-y-0' 
-                : 'opacity-0 translate-y-8'
-            }`}
+            className="mb-12"
+            style={getSectionStyle('back', 0)}
           >
             <Link href="/" className="text-base font-display text-gray-500 hover:text-black uppercase tracking-wide">
               ← Back to Home
@@ -112,11 +137,8 @@ export default function PurposePage() {
           {/* Header */}
           <div 
             ref={setSectionRef('header')}
-            className={`mb-16 text-center transition-all duration-1000 delay-100 ${
-              visibleSections.header 
-                ? 'opacity-100 translate-y-0' 
-                : 'opacity-0 translate-y-12'
-            }`}
+            className="mb-16 text-center"
+            style={getSectionStyle('header', 0.1)}
           >
             <h1 className="text-4xl md:text-5xl font-display tracking-wide text-black uppercase mb-6">
               Our Purpose
@@ -126,11 +148,8 @@ export default function PurposePage() {
           {/* Mission Statement */}
           <div 
             ref={setSectionRef('mission')}
-            className={`space-y-8 mb-16 transition-all duration-1000 delay-200 ${
-              visibleSections.mission 
-                ? 'opacity-100 translate-y-0' 
-                : 'opacity-0 translate-y-12'
-            }`}
+            className="space-y-8 mb-16"
+            style={getSectionStyle('mission', 0.2)}
           >
             <div className="prose prose-lg max-w-none">
               <p className="text-lg text-gray-700 leading-relaxed mb-6">
@@ -160,11 +179,8 @@ export default function PurposePage() {
           {/* Impact Section */}
           <div 
             ref={setSectionRef('impact')}
-            className={`border-t border-gray-200 pt-12 mb-16 transition-all duration-1000 delay-300 ${
-              visibleSections.impact 
-                ? 'opacity-100 translate-y-0' 
-                : 'opacity-0 translate-y-12'
-            }`}
+            className="border-t border-gray-200 pt-12 mb-16"
+            style={getSectionStyle('impact', 0.3)}
           >
             <h2 className="text-2xl font-display tracking-wide text-black uppercase mb-8 text-center">
               Our Impact
@@ -197,11 +213,8 @@ export default function PurposePage() {
           {/* Partners Section */}
           <div 
             ref={setSectionRef('partners')}
-            className={`border-t border-gray-200 pt-12 mb-16 transition-all duration-1000 delay-400 ${
-              visibleSections.partners 
-                ? 'opacity-100 translate-y-0' 
-                : 'opacity-0 translate-y-12'
-            }`}
+            className="border-t border-gray-200 pt-12 mb-16"
+            style={getSectionStyle('partners', 0.4)}
           >
             <h2 className="text-2xl font-display tracking-wide text-black uppercase mb-8 text-center">
               Our Partners
@@ -315,11 +328,8 @@ export default function PurposePage() {
           {/* Scripture */}
           <div 
             ref={setSectionRef('scripture')}
-            className={`border-t border-gray-200 pt-12 mb-8 text-center transition-all duration-1000 delay-500 ${
-              visibleSections.scripture 
-                ? 'opacity-100 translate-y-0' 
-                : 'opacity-0 translate-y-12'
-            }`}
+            className="border-t border-gray-200 pt-12 mb-8 text-center"
+            style={getSectionStyle('scripture', 0.5)}
           >
             <p className="text-lg md:text-xl text-gray-700 italic leading-relaxed mb-4">
               &ldquo;Truly I tell you, whatever you did for one of the least of these brothers and sisters of mine, you did for me.&rdquo;
