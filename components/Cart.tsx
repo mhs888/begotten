@@ -51,19 +51,38 @@ export default function Cart({ isOpen, onClose }: CartProps) {
   }, [items])
 
   const updateQuantity = (id: string, quantity: number) => {
+    let updatedItems: CartItem[]
     if (quantity <= 0) {
-      setItems(items.filter(item => item.id !== id))
+      updatedItems = items.filter(item => item.id !== id)
     } else {
-      setItems(items.map(item => 
+      updatedItems = items.map(item => 
         item.id === id ? { ...item, quantity } : item
-      ))
+      )
     }
+    setItems(updatedItems)
+    
+    // Update localStorage immediately
+    if (updatedItems.length > 0) {
+      localStorage.setItem('begotten-cart', JSON.stringify(updatedItems))
+    } else {
+      localStorage.removeItem('begotten-cart')
+    }
+    
     // Dispatch event to update cart count in navigation
     window.dispatchEvent(new CustomEvent('cartUpdated'))
   }
 
   const removeItem = (id: string) => {
-    setItems(items.filter(item => item.id !== id))
+    const updatedItems = items.filter(item => item.id !== id)
+    setItems(updatedItems)
+    
+    // Update localStorage immediately
+    if (updatedItems.length > 0) {
+      localStorage.setItem('begotten-cart', JSON.stringify(updatedItems))
+    } else {
+      localStorage.removeItem('begotten-cart')
+    }
+    
     // Dispatch event to update cart count in navigation
     window.dispatchEvent(new CustomEvent('cartUpdated'))
   }
