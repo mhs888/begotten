@@ -454,9 +454,9 @@ export default function ProductPage() {
               </div>
             )}
 
-            {/* Variant Selection */}
+            {/* Variant Selection - Always show Color first, then Size */}
             {colors.length > 0 && (
-              <div>
+              <div className="mb-6">
                 <label className="block text-sm uppercase tracking-wide text-black mb-2">
                   Color
                 </label>
