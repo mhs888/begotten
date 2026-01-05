@@ -131,7 +131,7 @@ export default function ProductShowcase() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12 border-b border-gray-200 pb-6 text-center">
-          <h2 className="text-2xl font-condensed font-bold tracking-wide text-black uppercase">
+          <h2 className="text-2xl font-display tracking-wide text-black uppercase">
             Divine Garments
           </h2>
         </div>

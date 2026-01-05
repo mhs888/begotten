@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter, Roboto_Condensed } from 'next/font/google'
+import { Inter, Bebas_Neue } from 'next/font/google'
 import './globals.css'
 
 const inter = Inter({ 
@@ -7,10 +7,10 @@ const inter = Inter({
   variable: '--font-inter',
 })
 
-const robotoCondensed = Roboto_Condensed({
+const bebasNeue = Bebas_Neue({
   subsets: ['latin'],
-  weight: ['400', '700'],
-  variable: '--font-roboto-condensed',
+  weight: ['400'],
+  variable: '--font-bebas-neue',
 })
 
 export const metadata: Metadata = {
@@ -42,7 +42,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${robotoCondensed.variable} font-sans`}>{children}</body>
+      <body className={`${inter.variable} ${bebasNeue.variable} font-sans`}>{children}</body>
     </html>
   )
 }
