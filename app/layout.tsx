@@ -5,8 +5,13 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Begotten Clothing - Profits for Charity',
+  title: 'Begotten | Quality Clothing for Charity',
   description: 'Quality clothing with all profits going to charity',
+  icons: {
+    icon: '/logo/begotten-logo.png',
+    shortcut: '/logo/begotten-logo.png',
+    apple: '/logo/begotten-logo.png',
+  },
 }
 
 export default function RootLayout({
