@@ -45,7 +45,10 @@ export default function Hero() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrollY(window.scrollY)
+      const currentScroll = window.scrollY
+      setScrollY(currentScroll)
+      // Debug: uncomment to see scroll values in console
+      // console.log('Scroll Y:', currentScroll)
     }
 
     // Set initial scroll position
@@ -125,15 +128,15 @@ export default function Hero() {
             className="text-3xl md:text-4xl lg:text-5xl font-display tracking-wide uppercase"
             style={{
               color: (() => {
-                // Fade from black (0,0,0) to light gray (180,180,180) over 400px of scroll
-                // Start fading immediately when scrolling begins
-                const fadeDistance = 400
+                // Fade from black (0,0,0) to very light gray (200,200,200) over 300px of scroll
+                // This makes the fade more noticeable and happen faster
+                const fadeDistance = 300
                 const scrollProgress = Math.min(Math.max(scrollY / fadeDistance, 0), 1)
-                const grayValue = Math.round(180 * scrollProgress)
+                const grayValue = Math.round(200 * scrollProgress)
                 const color = `rgb(${grayValue}, ${grayValue}, ${grayValue})`
                 return color
               })(),
-              transition: 'color 0.1s ease-out'
+              transition: 'color 0.15s linear'
             }}
           >
             Divine Garments With a Higher Purpose
