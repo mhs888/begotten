@@ -57,7 +57,7 @@ export default function PurposePage() {
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-center">
-            <div>
+            <div className="flex flex-col items-center">
               <div className="text-4xl font-display text-black mb-2">
                 100%
               </div>
@@ -65,7 +65,7 @@ export default function PurposePage() {
                 Profits to Charity
               </div>
             </div>
-            <div>
+            <div className="flex flex-col items-center">
               <div className="text-6xl font-display text-black mb-2">
                 ∞
               </div>
@@ -83,7 +83,7 @@ export default function PurposePage() {
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
+            <div className="text-center">
               <h3 className="text-lg font-display text-black uppercase mb-2">
                 World Vision
               </h3>
@@ -100,7 +100,7 @@ export default function PurposePage() {
               </a>
             </div>
 
-            <div>
+            <div className="text-center">
               <h3 className="text-lg font-display text-black uppercase mb-2">
                 Samaritan's Purse
               </h3>
@@ -117,7 +117,7 @@ export default function PurposePage() {
               </a>
             </div>
 
-            <div>
+            <div className="text-center">
               <h3 className="text-lg font-display text-black uppercase mb-2">
                 Compassion International
               </h3>
@@ -134,7 +134,7 @@ export default function PurposePage() {
               </a>
             </div>
 
-            <div>
+            <div className="text-center">
               <h3 className="text-lg font-display text-black uppercase mb-2">
                 Convoy of Hope
               </h3>
@@ -151,7 +151,7 @@ export default function PurposePage() {
               </a>
             </div>
 
-            <div>
+            <div className="text-center">
               <h3 className="text-lg font-display text-black uppercase mb-2">
                 The Salvation Army
               </h3>
@@ -168,7 +168,7 @@ export default function PurposePage() {
               </a>
             </div>
 
-            <div>
+            <div className="text-center">
               <h3 className="text-lg font-display text-black uppercase mb-2">
                 Children's Hunger Fund
               </h3>
