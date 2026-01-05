@@ -58,7 +58,7 @@ export default function PurposePage() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-center">
             <div>
-              <div className="text-5xl font-display text-black mb-2">
+              <div className="text-4xl font-display text-black mb-2">
                 100%
               </div>
               <div className="text-sm text-gray-600 uppercase tracking-wide">
@@ -66,7 +66,7 @@ export default function PurposePage() {
               </div>
             </div>
             <div>
-              <div className="text-5xl font-display text-black mb-2">
+              <div className="text-6xl font-display text-black mb-2">
                 ∞
               </div>
               <div className="text-sm text-gray-600 uppercase tracking-wide">
@@ -82,7 +82,7 @@ export default function PurposePage() {
             Our Partners
           </h2>
           
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
               <h3 className="text-lg font-display text-black uppercase mb-2">
                 World Vision
@@ -188,13 +188,19 @@ export default function PurposePage() {
         </div>
 
         {/* Scripture */}
-        <div className="border-t border-gray-200 pt-12 text-center">
+        <div className="border-t border-gray-200 pt-12 mb-8 text-center">
           <p className="text-lg md:text-xl text-gray-700 italic leading-relaxed mb-4">
             &ldquo;Truly I tell you, whatever you did for one of the least of these brothers and sisters of mine, you did for me.&rdquo;
           </p>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 mb-8">
             Matthew 25:40
           </p>
+          <Link 
+            href="/" 
+            className="inline-block bg-black text-white px-8 py-3 text-sm font-display uppercase tracking-wide hover:bg-gray-800 transition-colors"
+          >
+            Shop Now
+          </Link>
         </div>
       </div>
     </div>
