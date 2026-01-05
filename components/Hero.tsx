@@ -122,21 +122,25 @@ export default function Hero() {
       <div className="pt-36"></div>
 
       {/* Hero Text Section */}
-      <div className="pt-32 pb-8 px-6 lg:px-8 flex items-center justify-center">
+      <div 
+        id="hero-text-section"
+        className="pt-32 pb-8 px-6 lg:px-8 flex items-center justify-center"
+      >
         <div className="max-w-4xl mx-auto text-center">
           <h1 
-            className="text-3xl md:text-4xl lg:text-5xl font-display tracking-wide uppercase"
+            className="text-3xl md:text-4xl lg:text-5xl font-display tracking-wide uppercase text-black"
             style={{
-              color: (() => {
-                // Fade from black (0,0,0) to white (255,255,255) over 600px of scroll
-                const fadeDistance = 600
-                const scrollProgress = Math.min(Math.max(scrollY / fadeDistance, 0), 1)
-                const whiteValue = Math.round(255 * scrollProgress)
-                const color = `rgb(${whiteValue}, ${whiteValue}, ${whiteValue})`
-                console.log('Rendering text - Scroll:', scrollY, 'Progress:', scrollProgress.toFixed(2), 'Color:', color)
-                return color
+              opacity: (() => {
+                // Fade from 1 (fully visible) to 0 (invisible) based on scroll position
+                // Calculate based on element position in viewport
+                const fadeStart = 200 // Start fading after 200px of scroll
+                const fadeDistance = 500 // Fade over 500px
+                const scrollProgress = Math.max(0, (scrollY - fadeStart) / fadeDistance)
+                const opacity = Math.max(0, Math.min(1, 1 - scrollProgress))
+                console.log('Scroll:', scrollY, 'Opacity:', opacity.toFixed(2))
+                return opacity
               })(),
-              transition: 'color 0.1s linear'
+              transition: 'opacity 0.1s linear'
             }}
           >
             Divine Garments With a Higher Purpose
