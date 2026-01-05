@@ -51,41 +51,43 @@ export async function fetchProducts(): Promise<ShopifyProduct[]> {
 
   const query = `
     query {
-      products(first: 50, query: "status:active") {
-        edges {
-          node {
-            id
-            title
-            description
-            handle
-            priceRange {
-              minVariantPrice {
-                amount
-                currencyCode
-              }
-            }
-            images(first: 10) {
-              edges {
-                node {
-                  url
-                  altText
+      collection(handle: "begotten") {
+        products(first: 50) {
+          edges {
+            node {
+              id
+              title
+              description
+              handle
+              priceRange {
+                minVariantPrice {
+                  amount
+                  currencyCode
                 }
               }
-            }
-            variants(first: 10) {
-              edges {
-                node {
-                  id
-                  title
-                  price {
-                    amount
-                    currencyCode
-                  }
-                  availableForSale
-                  quantityAvailable
-                  image {
+              images(first: 10) {
+                edges {
+                  node {
                     url
                     altText
+                  }
+                }
+              }
+              variants(first: 10) {
+                edges {
+                  node {
+                    id
+                    title
+                    price {
+                      amount
+                      currencyCode
+                    }
+                    availableForSale
+                    quantityAvailable
+                    image {
+                      url
+                      altText
+                    }
                   }
                 }
               }
@@ -132,9 +134,9 @@ export async function fetchProducts(): Promise<ShopifyProduct[]> {
           continue
         }
         
-        const products = data.data?.products?.edges?.map((edge: any) => edge.node) || []
+        const products = data.data?.collection?.products?.edges?.map((edge: any) => edge.node) || []
         if (products.length > 0) {
-          console.log(`✅ Successfully fetched ${products.length} products using API ${version}`)
+          console.log(`✅ Successfully fetched ${products.length} products from collection using API ${version}`)
           console.log('📦 Product titles:', products.map((p: any) => p.title).join(', '))
           return products
         }
