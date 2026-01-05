@@ -122,20 +122,23 @@ export default function Hero() {
       <div className="pt-36"></div>
 
       {/* Hero Text Section */}
-      <div className="pt-16 pb-8 px-6 lg:px-8 flex items-center justify-center">
+      <div className="pt-32 pb-8 px-6 lg:px-8 flex items-center justify-center">
         <div className="max-w-4xl mx-auto text-center">
           <h1 
             className="text-3xl md:text-4xl lg:text-5xl font-display tracking-wide uppercase"
             style={{
               color: (() => {
-                // Fade from black (0,0,0) to white (255,255,255) over 300px of scroll
-                const fadeDistance = 300
+                // Fade from black (0,0,0) to white (255,255,255) over 600px of scroll
+                // Longer fade distance makes it more visible and gradual
+                const fadeDistance = 600
                 const scrollProgress = Math.min(Math.max(scrollY / fadeDistance, 0), 1)
                 const whiteValue = Math.round(255 * scrollProgress)
                 const color = `rgb(${whiteValue}, ${whiteValue}, ${whiteValue})`
+                // Debug: uncomment to see color values
+                // console.log('Scroll:', scrollY, 'Progress:', scrollProgress, 'Color:', color)
                 return color
               })(),
-              transition: 'color 0.15s linear'
+              transition: 'color 0.1s linear'
             }}
           >
             Divine Garments With a Higher Purpose
