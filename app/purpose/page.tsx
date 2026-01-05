@@ -58,16 +58,20 @@ export default function PurposePage() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-center">
             <div className="flex flex-col items-center">
-              <div className="text-4xl font-display text-black mb-2">
-                100%
+              <div className="h-20 flex items-center justify-center mb-2">
+                <div className="text-4xl font-display text-black">
+                  100%
+                </div>
               </div>
               <div className="text-sm text-gray-600 uppercase tracking-wide">
                 Profits to Charity
               </div>
             </div>
             <div className="flex flex-col items-center">
-              <div className="text-6xl font-display text-black mb-2">
-                ∞
+              <div className="h-20 flex items-center justify-center mb-2">
+                <div className="text-6xl font-display text-black">
+                  ∞
+                </div>
               </div>
               <div className="text-sm text-gray-600 uppercase tracking-wide">
                 Commitment
