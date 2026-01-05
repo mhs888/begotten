@@ -131,10 +131,7 @@ export default function Cart({ isOpen, onClose }: CartProps) {
           const fallbackUrl = `https://${shopifyStoreDomain}/cart`
           console.log('🔄 Using fallback URL (URL validation failed, hardcoded):', fallbackUrl)
           console.log('📍 Current window location before redirect:', window.location.href)
-          console.log('⏳ Waiting 5 seconds before redirect to allow you to see errors...')
-          setTimeout(() => {
-            window.location.replace(fallbackUrl)
-          }, 5000)
+          window.location.replace(fallbackUrl)
         }
       } else {
         // Fallback: redirect to Shopify store cart page
@@ -150,15 +147,12 @@ export default function Cart({ isOpen, onClose }: CartProps) {
       console.error('❌ Checkout error:', error)
       // Fallback: redirect to Shopify cart page (not custom domain)
       // HARDCODE the Shopify store domain to ensure we never use custom domain
-      const shopifyStoreDomain = '6tfp84-zr.myshopify.com'
+      const shopifyStoreDomain = 'bgttn.myshopify.com'
       const fallbackUrl = `https://${shopifyStoreDomain}/cart`
       console.error('❌ Checkout error caught:', error)
       console.log('🔄 Using fallback URL (error handler, hardcoded):', fallbackUrl)
       console.log('📍 Current window location before redirect:', window.location.href)
-      console.log('⏳ Waiting 5 seconds before redirect to allow you to see errors...')
-      setTimeout(() => {
-        window.location.replace(fallbackUrl)
-      }, 5000)
+      window.location.replace(fallbackUrl)
       setIsLoading(false)
     }
   }
