@@ -27,11 +27,20 @@ export const metadata: Metadata = {
     url: 'https://www.begotten.shop',
     siteName: 'Begotten',
     type: 'website',
+    images: [
+      {
+        url: 'https://www.begotten.shop/logo/begotten-logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'Begotten Logo',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Begotten | Divine Garments',
     description: 'Quality Clothing for a Higher Purpose',
+    images: ['https://www.begotten.shop/logo/begotten-logo.png'],
   },
 }
 
