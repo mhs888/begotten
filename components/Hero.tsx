@@ -48,6 +48,9 @@ export default function Hero() {
       setScrollY(window.scrollY)
     }
 
+    // Set initial scroll position
+    handleScroll()
+    
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
@@ -119,13 +122,13 @@ export default function Hero() {
       <div className="py-20 px-6 lg:px-8 flex items-center justify-center min-h-[60vh]">
         <div className="max-w-4xl mx-auto text-center">
           <h1 
-            className="text-3xl md:text-4xl lg:text-5xl font-display tracking-wide uppercase transition-colors duration-200"
+            className="text-3xl md:text-4xl lg:text-5xl font-display tracking-wide uppercase transition-colors duration-150 ease-out"
             style={{
               color: (() => {
-                // Fade from black (0,0,0) to gray (128,128,128) over 400px of scroll
-                const fadeDistance = 400
-                const scrollProgress = Math.min(scrollY / fadeDistance, 1)
-                const grayValue = Math.round(128 * scrollProgress)
+                // Fade from black (0,0,0) to medium gray (160,160,160) over 500px of scroll
+                const fadeDistance = 500
+                const scrollProgress = Math.min(Math.max(scrollY / fadeDistance, 0), 1)
+                const grayValue = Math.round(160 * scrollProgress)
                 return `rgb(${grayValue}, ${grayValue}, ${grayValue})`
               })()
             }}
