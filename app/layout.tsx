@@ -5,24 +5,24 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Begotten',
-  description: 'Quality clothing with all profits going to charity',
+  title: 'Begotten | Divine Garments',
+  description: 'Quality Clothing for a Higher Purpose',
   icons: {
     icon: '/logo/favicon.png',
     shortcut: '/logo/favicon.png',
     apple: '/logo/favicon.png',
   },
   openGraph: {
-    title: 'Begotten',
-    description: 'Quality clothing with all profits going to charity',
+    title: 'Begotten | Divine Garments',
+    description: 'Quality Clothing for a Higher Purpose',
     url: 'https://www.begotten.shop',
     siteName: 'Begotten',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Begotten',
-    description: 'Quality clothing with all profits going to charity',
+    title: 'Begotten | Divine Garments',
+    description: 'Quality Clothing for a Higher Purpose',
   },
 }
 
