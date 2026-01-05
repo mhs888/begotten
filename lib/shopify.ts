@@ -134,7 +134,8 @@ export async function fetchProducts(): Promise<ShopifyProduct[]> {
         
         const products = data.data?.products?.edges?.map((edge: any) => edge.node) || []
         if (products.length > 0) {
-          console.log(`Successfully fetched ${products.length} products using API ${version}`)
+          console.log(`✅ Successfully fetched ${products.length} products using API ${version}`)
+          console.log('📦 Product titles:', products.map((p: any) => p.title).join(', '))
           return products
         }
       } catch (error) {
