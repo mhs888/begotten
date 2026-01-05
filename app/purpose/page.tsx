@@ -10,40 +10,34 @@ export default function PurposePage() {
   const [visibleSections, setVisibleSections] = useState<{ [key: string]: boolean }>({})
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({})
 
-  // Fetch product images for scrolling band
+  // Load images for scrolling band
   useEffect(() => {
-    const loadImages = async () => {
-      try {
-        const products = await fetchProducts()
-        const productImages: string[] = []
-        
-        products.forEach((product: any) => {
-          const imageEdges = product.images?.edges || []
-          imageEdges.forEach((edge: any) => {
-            if (edge.node?.url) {
-              productImages.push(edge.node.url)
-            }
-          })
-        })
-        
-        // If we have images, use them; otherwise use placeholder squares
-        if (productImages.length > 0) {
-          // Duplicate images for seamless infinite scroll (need at least 2 copies)
-          setImages([...productImages, ...productImages])
-        } else {
-          // Fallback: create array of placeholder colors
-          const placeholders = Array(12).fill(null).map((_, i) => `data:image/svg+xml;base64,${btoa(`<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="200" fill="%23${['f3f4f6', 'e5e7eb', 'd1d5db'][i % 3]}"/></svg>`)}`)
-          setImages([...placeholders, ...placeholders])
-        }
-      } catch (error) {
-        console.error('Error loading images:', error)
-        // Fallback placeholders
-        const placeholders = Array(12).fill(null).map((_, i) => `data:image/svg+xml;base64,${btoa(`<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="200" fill="%23${['f3f4f6', 'e5e7eb', 'd1d5db'][i % 3]}"/></svg>`)}`)
-        setImages([...placeholders, ...placeholders])
-      }
-    }
+    // List of image paths in /public/purpose-scroll/
+    // Add your images to: /public/purpose-scroll/ folder
+    // Name them: image1.jpg, image2.jpg, image3.jpg, etc.
+    const localImages = [
+      '/purpose-scroll/image1.jpg',
+      '/purpose-scroll/image2.jpg',
+      '/purpose-scroll/image3.jpg',
+      '/purpose-scroll/image4.jpg',
+      '/purpose-scroll/image5.jpg',
+      '/purpose-scroll/image6.jpg',
+      '/purpose-scroll/image7.jpg',
+      '/purpose-scroll/image8.jpg',
+    ]
     
-    loadImages()
+    // Filter out images that don't exist (will be handled by Image component error handling)
+    // For now, we'll use all of them and let Next.js handle missing images
+    const imageList = localImages.filter(img => img) // Remove any empty entries
+    
+    if (imageList.length > 0) {
+      // Duplicate images for seamless infinite scroll (need at least 2 copies)
+      setImages([...imageList, ...imageList])
+    } else {
+      // Fallback: create array of placeholder colors if no images found
+      const placeholders = Array(8).fill(null).map((_, i) => `data:image/svg+xml;base64,${btoa(`<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="200" fill="%23${['f3f4f6', 'e5e7eb', 'd1d5db'][i % 3]}"/></svg>`)}`)
+      setImages([...placeholders, ...placeholders])
+    }
   }, [])
 
   // Scroll animation observer
