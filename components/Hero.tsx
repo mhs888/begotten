@@ -47,8 +47,8 @@ export default function Hero() {
     const handleScroll = () => {
       const currentScroll = window.scrollY
       setScrollY(currentScroll)
-      // Debug: uncomment to see scroll values in console
-      // console.log('Scroll Y:', currentScroll)
+      // Debug: log scroll values to verify it's working
+      console.log('Scroll Y:', currentScroll, 'Color will be:', Math.round(255 * Math.min(Math.max(currentScroll / 600, 0), 1)))
     }
 
     // Set initial scroll position
@@ -129,13 +129,11 @@ export default function Hero() {
             style={{
               color: (() => {
                 // Fade from black (0,0,0) to white (255,255,255) over 600px of scroll
-                // Longer fade distance makes it more visible and gradual
                 const fadeDistance = 600
                 const scrollProgress = Math.min(Math.max(scrollY / fadeDistance, 0), 1)
                 const whiteValue = Math.round(255 * scrollProgress)
                 const color = `rgb(${whiteValue}, ${whiteValue}, ${whiteValue})`
-                // Debug: uncomment to see color values
-                // console.log('Scroll:', scrollY, 'Progress:', scrollProgress, 'Color:', color)
+                console.log('Rendering text - Scroll:', scrollY, 'Progress:', scrollProgress.toFixed(2), 'Color:', color)
                 return color
               })(),
               transition: 'color 0.1s linear'
