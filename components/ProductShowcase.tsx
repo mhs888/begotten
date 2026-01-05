@@ -127,16 +127,16 @@ export default function ProductShowcase() {
   // Show all products (no filtering needed)
 
   return (
-    <section id="products" className="py-16 bg-white">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        {/* Product Grid - YSL Style */}
+    <section id="products" className="py-24 bg-white">
+      <div className="max-w-6xl mx-auto px-6 lg:px-8">
+        {/* Product Grid - Two Columns */}
         {loading ? (
           <div className="text-center py-12">
             <p className="text-gray-500 text-sm uppercase tracking-wide">Loading products...</p>
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16">
               {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}

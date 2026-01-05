@@ -41,7 +41,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     <Link href={`/products/${productId}`} className="group bg-white block">
       {/* Product Image(s) */}
       <div 
-        className="relative aspect-square bg-gray-50 overflow-hidden mb-4"
+        className="relative aspect-square bg-gray-50 overflow-hidden mb-6 transition-transform duration-500 group-hover:scale-105"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -109,7 +109,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
       {/* Product Info - Minimal YSL Style */}
       <div className="text-center">
-        <h3 className="text-base font-display text-black tracking-wide uppercase">
+        <h3 className="text-lg md:text-xl font-display text-black tracking-wide uppercase">
           {product.name}
         </h3>
       </div>

@@ -104,6 +104,15 @@ export default function Hero() {
 
       {/* Spacer for fixed nav */}
       <div className="pt-36"></div>
+
+      {/* Hero Text Section */}
+      <div className="py-20 px-6 lg:px-8 flex items-center justify-center min-h-[60vh]">
+        <div className="max-w-4xl mx-auto text-center">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-display tracking-wide text-black uppercase">
+            Divine Garments With a Higher Purpose
+          </h1>
+        </div>
+      </div>
     </div>
   )
 }
