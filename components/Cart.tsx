@@ -120,8 +120,13 @@ export default function Cart({ isOpen, onClose }: CartProps) {
           
           console.log('✅ Redirecting to safe checkout URL:', safeUrl)
           console.log('📍 Current window location before redirect:', window.location.href)
-          // Use window.location.replace to prevent back button issues
-          window.location.replace(safeUrl)
+          
+          // Add a small delay to allow console logs to be visible before redirect
+          // This helps with debugging - logs will be visible for 2 seconds
+          setTimeout(() => {
+            // Use window.location.replace to prevent back button issues
+            window.location.replace(safeUrl)
+          }, 2000)
         } catch (urlError) {
           console.error('❌ Invalid or unsafe checkout URL:', safeUrl, urlError)
           // Fallback to Shopify store cart (always safe)
