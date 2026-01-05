@@ -393,17 +393,14 @@ export async function createCartAndCheckout(items: Array<{ variantId: string; qu
         }
         
         const checkoutUrl = cart?.checkoutUrl
-        const webUrl = cart?.webUrl
         const cartId = cart?.id
         
         console.log('=== CART RESPONSE DEBUG ===')
         console.log('Cart ID:', cartId)
         console.log('Checkout URL:', checkoutUrl)
-        console.log('Web URL:', webUrl)
         console.log('Checkout URL type:', typeof checkoutUrl)
-        console.log('Web URL type:', typeof webUrl)
         
-        // Always prefer checkoutUrl if it's a valid HTTP URL
+        // Always use checkoutUrl if it's a valid HTTP URL
         // The checkoutUrl should be a direct checkout URL from Shopify
         if (checkoutUrl && typeof checkoutUrl === 'string' && checkoutUrl.startsWith('http')) {
           const safeCheckoutUrl = ensureShopifyDomain(checkoutUrl)
@@ -413,20 +410,10 @@ export async function createCartAndCheckout(items: Array<{ variantId: string; qu
           }
         }
         
-        // Only use webUrl if it points to the Shopify store domain (not custom domain)
-        // The webUrl might point to the custom domain's /cart which doesn't exist
-        if (webUrl && typeof webUrl === 'string' && webUrl.startsWith('http')) {
-          const safeWebUrl = ensureShopifyDomain(webUrl)
-          if (safeWebUrl && safeWebUrl.includes('.myshopify.com')) {
-            console.log('✅ Using webUrl (Shopify domain):', safeWebUrl)
-            return safeWebUrl
-          }
-        }
-        
+        // If checkoutUrl is not available, use fallback
         // Last resort: redirect to Shopify store cart page (not custom domain)
-        // This ensures we always go to a valid Shopify page
         const fallbackUrl = `https://${SHOPIFY_STORE_DOMAIN}/cart`
-        console.log('⚠️ Using fallback: Shopify store cart page:', fallbackUrl)
+        console.log('⚠️ No checkoutUrl available, using fallback: Shopify store cart page:', fallbackUrl)
         return fallbackUrl
       } catch (error) {
         console.error(`❌ Error with API ${version}:`, error)
