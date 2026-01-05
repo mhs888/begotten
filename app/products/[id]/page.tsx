@@ -607,7 +607,7 @@ export default function ProductPage() {
             <button
               onClick={handleAddToCart}
               disabled={!canAddToCart()}
-              className="w-full bg-black text-white py-4 text-sm uppercase tracking-wide hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-black text-white py-4 text-sm font-display uppercase tracking-wide hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {!selectedVariant || (colors.length > 0 && !selectedColor) || (sizes.length > 0 && !selectedSize)
                 ? 'Select Size & Color' 
