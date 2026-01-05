@@ -9,7 +9,7 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
-        display: ['var(--font-montserrat)', 'system-ui', 'sans-serif'],
+        condensed: ['var(--font-roboto-condensed)', 'Helvetica Neue Condensed', 'Arial Narrow', 'sans-serif'],
       },
       colors: {
         // Minimal black/white/gray palette
