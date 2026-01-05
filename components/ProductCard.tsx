@@ -108,13 +108,10 @@ export default function ProductCard({ product }: ProductCardProps) {
       </div>
 
       {/* Product Info - Minimal YSL Style */}
-      <div className="space-y-1 text-center">
+      <div className="text-center">
         <h3 className="text-sm font-light text-black uppercase tracking-wide">
           {product.name}
         </h3>
-        <div className="pt-2">
-          <span className="text-sm text-black font-light">${product.price.toFixed(2)}</span>
-        </div>
       </div>
     </Link>
   )
