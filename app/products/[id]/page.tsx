@@ -404,7 +404,7 @@ export default function ProductPage() {
       <nav className="fixed top-0 w-full z-50 bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
-            <Link href="/" className="text-sm text-gray-500 hover:text-black uppercase tracking-wide">
+            <Link href="/" className="text-sm font-display text-gray-500 hover:text-black uppercase tracking-wide">
               ← Back to Products
             </Link>
             <button
@@ -480,7 +480,7 @@ export default function ProductPage() {
           {/* Product Info */}
           <div className="space-y-6">
             <div>
-              <h1 className="text-3xl md:text-4xl font-light tracking-wide text-black uppercase mb-4">
+              <h1 className="text-3xl md:text-4xl font-display tracking-wide text-black uppercase mb-4">
                 {product.title}
               </h1>
               <p className="text-2xl font-light text-black mb-6">
@@ -499,7 +499,7 @@ export default function ProductPage() {
             {/* Variant Selection - Always show Color first, then Size */}
             {colors.length > 0 && (
               <div className="mb-6">
-                <label className="block text-sm uppercase tracking-wide text-black mb-2">
+                <label className="block text-sm font-display uppercase tracking-wide text-black mb-2">
                   Color
                 </label>
                 <div className="flex gap-2 flex-wrap">
@@ -541,7 +541,7 @@ export default function ProductPage() {
 
             {sizes.length > 0 && (
               <div>
-                <label className="block text-sm uppercase tracking-wide text-black mb-2">
+                <label className="block text-sm font-display uppercase tracking-wide text-black mb-2">
                   Size
                 </label>
                 <div className="flex gap-2 flex-wrap">
@@ -583,7 +583,7 @@ export default function ProductPage() {
 
             {/* Quantity */}
             <div>
-              <label className="block text-sm uppercase tracking-wide text-black mb-2">
+              <label className="block text-sm font-display uppercase tracking-wide text-black mb-2">
                 Quantity
               </label>
               <div className="flex items-center border border-gray-300 w-fit">
