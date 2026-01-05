@@ -307,10 +307,21 @@ export default function ProductPage() {
 
   // Check if a size/color combination is available
   const isVariantAvailable = (color: string, size: string) => {
+    // Detect format (same logic as above)
+    const firstVariantParts = variants[0]?.title.split(' / ') || []
+    const commonSizes = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL', 'XXS', 'XXXL', 'Small', 'Medium', 'Large', 'Extra Large']
+    const commonColors = ['Black', 'White', 'Grey', 'Gray', 'Navy', 'Red', 'Blue', 'Green', 'Brown', 'Beige', 'Cream']
+    let isSizeFirstFormat = false
+    if (firstVariantParts.length === 2) {
+      const firstPart = firstVariantParts[0].trim()
+      isSizeFirstFormat = commonSizes.some(s => firstPart === s || firstPart.includes(s)) &&
+                          !commonColors.some(c => firstPart === c || firstPart.includes(c))
+    }
+    
     const variant = variants.find((v: any) => {
       const parts = v.title.split(' / ')
-      const variantColor = parts[0]
-      const variantSize = parts[parts.length - 1]
+      const variantColor = isSizeFirstFormat ? parts[parts.length - 1] : parts[0]
+      const variantSize = isSizeFirstFormat ? parts[0] : parts[parts.length - 1]
       return variantColor === color && variantSize === size
     })
     
