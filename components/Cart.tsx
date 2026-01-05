@@ -121,12 +121,14 @@ export default function Cart({ isOpen, onClose }: CartProps) {
           console.log('✅ Redirecting to safe checkout URL:', safeUrl)
           console.log('📍 Current window location before redirect:', window.location.href)
           
-          // Add a small delay to allow console logs to be visible before redirect
-          // This helps with debugging - logs will be visible for 2 seconds
+          // Add a delay to allow console logs to be visible before redirect
+          // This helps with debugging - logs will be visible for 5 seconds
+          console.log('⏳ Waiting 5 seconds before redirect to allow you to see logs...')
           setTimeout(() => {
+            console.log('🔄 Redirecting now...')
             // Use window.location.replace to prevent back button issues
             window.location.replace(safeUrl)
-          }, 2000)
+          }, 5000)
         } catch (urlError) {
           console.error('❌ Invalid or unsafe checkout URL:', safeUrl, urlError)
           // Fallback to Shopify store cart (always safe)
@@ -153,9 +155,13 @@ export default function Cart({ isOpen, onClose }: CartProps) {
       // HARDCODE the Shopify store domain to ensure we never use custom domain
       const shopifyStoreDomain = '6tfp84-zr.myshopify.com'
       const fallbackUrl = `https://${shopifyStoreDomain}/cart`
+      console.error('❌ Checkout error caught:', error)
       console.log('🔄 Using fallback URL (error handler, hardcoded):', fallbackUrl)
       console.log('📍 Current window location before redirect:', window.location.href)
-      window.location.replace(fallbackUrl)
+      console.log('⏳ Waiting 5 seconds before redirect to allow you to see errors...')
+      setTimeout(() => {
+        window.location.replace(fallbackUrl)
+      }, 5000)
       setIsLoading(false)
     }
   }
