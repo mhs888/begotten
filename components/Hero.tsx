@@ -122,7 +122,7 @@ export default function Hero() {
       <div className="pt-36"></div>
 
       {/* Hero Text Section */}
-      <div className="py-8 px-6 lg:px-8 flex items-center justify-center">
+      <div className="pt-16 pb-8 px-6 lg:px-8 flex items-center justify-center">
         <div className="max-w-4xl mx-auto text-center">
           <h1 
             className="text-3xl md:text-4xl lg:text-5xl font-display tracking-wide uppercase"
