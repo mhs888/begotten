@@ -78,14 +78,34 @@ export default function ProductPage() {
   }, [productId])
 
   // Extract size and color options from variants (needed before useEffect)
+  // Detect format: most products use "Color / Size", but some may use "Size / Color"
+  // Common size values to help detect format
+  const commonSizes = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL', 'XXS', 'XXXL', 'Small', 'Medium', 'Large', 'Extra Large']
+  const commonColors = ['Black', 'White', 'Grey', 'Gray', 'Navy', 'Red', 'Blue', 'Green', 'Brown', 'Beige', 'Cream']
+  
+  // Check first variant to determine format
+  let isSizeFirstFormat = false
+  if (variants.length > 0) {
+    const firstVariantParts = variants[0].title.split(' / ')
+    if (firstVariantParts.length === 2) {
+      const firstPart = firstVariantParts[0].trim()
+      const lastPart = firstVariantParts[1].trim()
+      // If first part looks like a size, it's Size/Color format
+      isSizeFirstFormat = commonSizes.some(size => firstPart === size || firstPart.includes(size)) &&
+                          !commonColors.some(color => firstPart === color || firstPart.includes(color))
+    }
+  }
+  
   const sizes = Array.from(new Set(variants.map((v: any) => {
     const parts = v.title.split(' / ')
-    return parts[parts.length - 1] // Last part is usually size
+    // If Size/Color format, first part is size; otherwise last part is size
+    return isSizeFirstFormat ? parts[0] : parts[parts.length - 1]
   }))).filter(Boolean)
 
   const colors = Array.from(new Set(variants.map((v: any) => {
     const parts = v.title.split(' / ')
-    return parts[0] // First part is usually color
+    // If Size/Color format, last part is color; otherwise first part is color
+    return isSizeFirstFormat ? parts[parts.length - 1] : parts[0]
   }))).filter(Boolean)
 
   // Update variant when size/color changes - MUST be before early returns
@@ -98,10 +118,21 @@ export default function ProductPage() {
     // Only set variant if both color and size are selected (if product has variants)
     if (colors.length > 0 && sizes.length > 0) {
       if (selectedSize && selectedColor) {
+        // Detect format again (same logic as above)
+        const firstVariantParts = variants[0]?.title.split(' / ') || []
+        const commonSizes = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL', 'XXS', 'XXXL', 'Small', 'Medium', 'Large', 'Extra Large']
+        const commonColors = ['Black', 'White', 'Grey', 'Gray', 'Navy', 'Red', 'Blue', 'Green', 'Brown', 'Beige', 'Cream']
+        let isSizeFirstFormat = false
+        if (firstVariantParts.length === 2) {
+          const firstPart = firstVariantParts[0].trim()
+          isSizeFirstFormat = commonSizes.some(size => firstPart === size || firstPart.includes(size)) &&
+                              !commonColors.some(color => firstPart === color || firstPart.includes(color))
+        }
+        
         const variant = variants.find((v: any) => {
           const parts = v.title.split(' / ')
-          const variantColor = parts[0]
-          const variantSize = parts[parts.length - 1]
+          const variantColor = isSizeFirstFormat ? parts[parts.length - 1] : parts[0]
+          const variantSize = isSizeFirstFormat ? parts[0] : parts[parts.length - 1]
           return variantColor === selectedColor && variantSize === selectedSize
         })
         if (variant && variant.availableForSale !== false) {
