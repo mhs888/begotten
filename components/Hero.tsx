@@ -119,9 +119,15 @@ export default function Hero() {
       <div className="py-20 px-6 lg:px-8 flex items-center justify-center min-h-[60vh]">
         <div className="max-w-4xl mx-auto text-center">
           <h1 
-            className="text-3xl md:text-4xl lg:text-5xl font-display tracking-wide uppercase transition-colors duration-300"
+            className="text-3xl md:text-4xl lg:text-5xl font-display tracking-wide uppercase transition-colors duration-200"
             style={{
-              color: `rgb(${Math.max(0, 100 - scrollY * 0.3)}, ${Math.max(0, 100 - scrollY * 0.3)}, ${Math.max(0, 100 - scrollY * 0.3)})`
+              color: (() => {
+                // Fade from black (0,0,0) to gray (128,128,128) over 400px of scroll
+                const fadeDistance = 400
+                const scrollProgress = Math.min(scrollY / fadeDistance, 1)
+                const grayValue = Math.round(128 * scrollProgress)
+                return `rgb(${grayValue}, ${grayValue}, ${grayValue})`
+              })()
             }}
           >
             Divine Garments With a Higher Purpose
