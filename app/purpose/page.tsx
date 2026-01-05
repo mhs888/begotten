@@ -35,8 +35,8 @@ export default function PurposePage() {
             </p>
 
             <p className="text-lg text-gray-700 leading-relaxed mb-6">
-              <strong className="text-black">100% of our profits go directly to charitable causes.</strong> 
-              Our foundational principle is to operate at cost, ensuring that every dollar beyond what's 
+              <strong className="text-black">100% of our profits go directly to charitable causes.</strong> Our 
+              foundational principle is to operate at cost, ensuring that every dollar beyond what's 
               needed to sustain our operations goes to organizations and individuals making a difference 
               in the world.
             </p>
