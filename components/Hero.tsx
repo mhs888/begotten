@@ -81,7 +81,7 @@ export default function Hero() {
       <Cart isOpen={cartOpen} onClose={() => setCartOpen(false)} />
 
       {/* Hero Content - Minimal */}
-      <div className="pt-40 pb-12 px-6 lg:px-8 flex items-center justify-center min-h-[40vh]">
+      <div className="pt-40 pb-20 px-6 lg:px-8 flex items-center justify-center min-h-[60vh]">
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-sm md:text-base lg:text-lg xl:text-xl font-light tracking-wide text-black mb-12 leading-relaxed italic max-w-4xl mx-auto">
             &ldquo;For God so loved the world, that he gave his only <span className="font-semibold not-italic">Begotten</span> Son, that whosoever believeth in him should not perish, but have everlasting life&rdquo;
