@@ -16,9 +16,10 @@ export default function Hero() {
       if (savedCart) {
         try {
           const items = JSON.parse(savedCart)
-          const count = items.reduce((sum: number, item: any) => sum + item.quantity, 0)
+          const count = items.reduce((sum: number, item: any) => sum + (item.quantity || 0), 0)
           setCartCount(count)
         } catch (e) {
+          console.error('Error parsing cart:', e)
           setCartCount(0)
         }
       } else {
@@ -26,9 +27,19 @@ export default function Hero() {
       }
     }
 
+    // Update immediately on mount
     updateCartCount()
+    
+    // Listen for cart updates
     window.addEventListener('cartUpdated', updateCartCount)
-    return () => window.removeEventListener('cartUpdated', updateCartCount)
+    
+    // Also check periodically in case events are missed
+    const interval = setInterval(updateCartCount, 1000)
+    
+    return () => {
+      window.removeEventListener('cartUpdated', updateCartCount)
+      clearInterval(interval)
+    }
   }, [])
   
   return (

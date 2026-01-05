@@ -58,10 +58,14 @@ export default function Cart({ isOpen, onClose }: CartProps) {
         item.id === id ? { ...item, quantity } : item
       ))
     }
+    // Dispatch event to update cart count in navigation
+    window.dispatchEvent(new CustomEvent('cartUpdated'))
   }
 
   const removeItem = (id: string) => {
     setItems(items.filter(item => item.id !== id))
+    // Dispatch event to update cart count in navigation
+    window.dispatchEvent(new CustomEvent('cartUpdated'))
   }
 
   const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
