@@ -74,6 +74,9 @@ export default function Cart({ isOpen, onClose }: CartProps) {
       const { createCartAndCheckout } = await import('@/lib/shopify')
       
       // Prepare cart items with variant IDs
+      console.log('🛒 Items in cart before checkout:', items)
+      console.log('🛒 Items with variant IDs:', items.map(item => ({ name: item.name, variantId: item.variantId })))
+      
       const cartItems = items
         .filter(item => item.variantId) // Only include items with variant IDs
         .map(item => ({
@@ -81,8 +84,11 @@ export default function Cart({ isOpen, onClose }: CartProps) {
           quantity: item.quantity
         }))
 
+      console.log('🛒 Cart items prepared for API:', cartItems)
+
       if (cartItems.length === 0) {
-        console.error('No valid items in cart')
+        console.error('❌ No valid items in cart - missing variant IDs')
+        alert('Unable to checkout: Items are missing variant information. Please try adding items to cart again.')
         setIsLoading(false)
         return
       }
