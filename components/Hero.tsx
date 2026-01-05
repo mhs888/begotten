@@ -82,7 +82,7 @@ export default function Hero() {
               {/* Purpose Button */}
               <Link 
                 href="/purpose"
-                className="text-lg font-display text-black hover:text-gray-600 uppercase tracking-wide transition-colors"
+                className="text-lg font-display text-black hover:text-gray-600 uppercase tracking-wide transition-all duration-300 hover:scale-110"
               >
                 Purpose
               </Link>
@@ -90,7 +90,7 @@ export default function Hero() {
               {/* Cart */}
               <button
                 onClick={() => setCartOpen(true)}
-                className="relative text-black hover:text-gray-600 transition-colors"
+                className="relative text-black hover:text-gray-600 transition-all duration-300 hover:scale-110"
                 aria-label="Shopping cart"
               >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
