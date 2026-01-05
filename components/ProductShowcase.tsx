@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import ProductCard from './ProductCard'
 import { fetchProducts } from '@/lib/shopify'
 
@@ -43,6 +43,8 @@ const localProducts: Product[] = [
 export default function ProductShowcase() {
   const [products, setProducts] = useState<Product[]>(localProducts)
   const [loading, setLoading] = useState(true)
+  const sectionRef = useRef<HTMLElement>(null)
+  const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
     // Try to fetch from Shopify, fallback to local products
@@ -124,10 +126,35 @@ export default function ProductShowcase() {
     loadProducts()
   }, [])
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+        }
+      },
+      { threshold: 0.1 }
+    )
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current)
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current)
+      }
+    }
+  }, [])
+
   // Show all products (no filtering needed)
 
   return (
-    <section id="products" className="py-24 bg-white">
+    <section 
+      ref={sectionRef}
+      id="products" 
+      className={`py-24 bg-white transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+    >
       <div className="max-w-6xl mx-auto px-6 lg:px-8">
         {/* Product Grid - Two Columns */}
         {loading ? (
@@ -137,8 +164,16 @@ export default function ProductShowcase() {
         ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16">
-              {products.map((product) => (
-                <ProductCard key={product.id} product={product} />
+              {products.map((product, index) => (
+                <div
+                  key={product.id}
+                  className={`transition-all duration-700 delay-${index * 100} ${
+                    isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+                  }`}
+                  style={{ transitionDelay: `${index * 100}ms` }}
+                >
+                  <ProductCard product={product} />
+                </div>
               ))}
             </div>
 
