@@ -145,7 +145,7 @@ export default function Cart({ isOpen, onClose }: CartProps) {
       } else {
         // Fallback: redirect to Shopify store cart page
         // HARDCODE the Shopify store domain to ensure we never use custom domain
-        const shopifyStoreDomain = '6tfp84-zr.myshopify.com'
+        const shopifyStoreDomain = 'bgttn.myshopify.com'
         const fallbackUrl = `https://${shopifyStoreDomain}/cart`
         console.error('❌ Failed to create cart via API, redirecting to Shopify cart page')
         console.log('🔄 Using fallback URL (hardcoded):', fallbackUrl)
