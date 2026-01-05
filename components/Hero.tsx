@@ -61,7 +61,7 @@ export default function Hero() {
               {/* Purpose Button */}
               <Link 
                 href="/purpose"
-                className="text-base font-display text-black hover:text-gray-600 uppercase tracking-wide transition-colors"
+                className="text-lg font-display text-black hover:text-gray-600 uppercase tracking-wide transition-colors"
               >
                 Purpose
               </Link>
