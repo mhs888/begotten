@@ -134,10 +134,13 @@ export default function Cart({ isOpen, onClose }: CartProps) {
           // Fallback to Shopify store cart (always safe)
           // HARDCODE the Shopify store domain to ensure we never use custom domain
           const shopifyStoreDomain = 'bgttn.myshopify.com'
-        const fallbackUrl = `https://${shopifyStoreDomain}/cart`
-        console.log('🔄 Using fallback URL (URL validation failed, hardcoded):', fallbackUrl)
-        console.log('📍 Current window location before redirect:', window.location.href)
-        window.location.replace(fallbackUrl)
+          const fallbackUrl = `https://${shopifyStoreDomain}/cart`
+          console.log('🔄 Using fallback URL (URL validation failed, hardcoded):', fallbackUrl)
+          console.log('📍 Current window location before redirect:', window.location.href)
+          console.log('⏳ Waiting 5 seconds before redirect to allow you to see errors...')
+          setTimeout(() => {
+            window.location.replace(fallbackUrl)
+          }, 5000)
         }
       } else {
         // Fallback: redirect to Shopify store cart page
