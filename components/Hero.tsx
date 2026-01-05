@@ -34,7 +34,7 @@ export default function Hero() {
   return (
     <div className="relative bg-white">
       {/* Navigation - Minimal */}
-      <nav className="fixed top-0 w-full z-50 bg-white pt-4 pb-4">
+      <nav className="fixed top-0 w-full z-50 bg-white pt-3 pb-3">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex items-center justify-between">
             {/* Logo */}
@@ -45,7 +45,7 @@ export default function Hero() {
                   alt="Begotten"
                   width={400}
                   height={120}
-                  className="h-24 md:h-32 lg:h-36 w-auto"
+                  className="h-20 md:h-28 lg:h-32 w-auto"
                   priority
                   onError={() => setLogoError(true)}
                 />
@@ -74,14 +74,14 @@ export default function Hero() {
           </div>
         </div>
         {/* Border line below logo */}
-        <div className="border-b border-gray-200 mt-4"></div>
+        <div className="border-b border-gray-200 mt-3"></div>
       </nav>
 
       {/* Cart Sidebar */}
       <Cart isOpen={cartOpen} onClose={() => setCartOpen(false)} />
 
       {/* Hero Content - Minimal */}
-      <div className="pt-40 pb-20 px-6 lg:px-8 flex items-center justify-center min-h-[60vh]">
+      <div className="pt-36 pb-12 px-6 lg:px-8 flex items-center justify-center min-h-[50vh]">
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-sm md:text-base lg:text-lg xl:text-xl font-light tracking-wide text-black mb-12 leading-relaxed italic max-w-4xl mx-auto">
             &ldquo;For God so loved the world, that he gave his only <span className="font-semibold not-italic">Begotten</span> Son, that whosoever believeth in him should not perish, but have everlasting life&rdquo;
