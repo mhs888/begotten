@@ -129,13 +129,6 @@ export default function ProductShowcase() {
   return (
     <section id="products" className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-12 border-b border-gray-200 pb-6 text-center">
-          <h2 className="text-2xl font-display tracking-wide text-black uppercase">
-            Divine Garments
-          </h2>
-        </div>
-
         {/* Product Grid - YSL Style */}
         {loading ? (
           <div className="text-center py-12">
