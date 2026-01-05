@@ -9,6 +9,7 @@ export default function Hero() {
   const [logoError, setLogoError] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
   const [cartCount, setCartCount] = useState(0)
+  const [scrollY, setScrollY] = useState(0)
 
   useEffect(() => {
     const updateCartCount = () => {
@@ -40,6 +41,15 @@ export default function Hero() {
       window.removeEventListener('cartUpdated', updateCartCount)
       clearInterval(interval)
     }
+  }, [])
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY)
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
   
   return (
@@ -108,7 +118,12 @@ export default function Hero() {
       {/* Hero Text Section */}
       <div className="py-20 px-6 lg:px-8 flex items-center justify-center min-h-[60vh]">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-display tracking-wide text-black uppercase">
+          <h1 
+            className="text-3xl md:text-4xl lg:text-5xl font-display tracking-wide uppercase transition-colors duration-300"
+            style={{
+              color: `rgb(${Math.max(0, 100 - scrollY * 0.3)}, ${Math.max(0, 100 - scrollY * 0.3)}, ${Math.max(0, 100 - scrollY * 0.3)})`
+            }}
+          >
             Divine Garments With a Higher Purpose
           </h1>
         </div>
