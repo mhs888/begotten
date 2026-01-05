@@ -57,7 +57,13 @@ export default function PurposePage() {
   const getSectionStyle = (key: string, offset: number = 0) => {
     const element = sectionRefs.current[key]
     if (!element) {
-      return { opacity: 0, transform: 'translateY(50px)' }
+      // On initial load, show elements fully visible
+      return { opacity: 1, transform: 'translateY(0px)' }
+    }
+
+    // If user hasn't scrolled yet, show elements fully visible
+    if (scrollY === 0) {
+      return { opacity: 1, transform: 'translateY(0px)' }
     }
 
     const rect = element.getBoundingClientRect()
@@ -65,7 +71,7 @@ export default function PurposePage() {
     const elementTop = rect.top
     const elementCenter = rect.top + rect.height / 2
     
-    // Calculate progress: 0 when element is below viewport, 1 when centered, 0 when above
+    // Calculate progress: 0 when element is below viewport, 1 when centered
     let progress = 0
     
     if (elementTop < windowHeight && elementTop > -rect.height) {
@@ -77,19 +83,22 @@ export default function PurposePage() {
     } else if (elementTop < -rect.height) {
       // Element is above viewport - fully visible
       progress = 1
+    } else if (elementTop > windowHeight) {
+      // Element is below viewport - start faded
+      progress = 0
     }
     
     // Apply offset for staggered effect
     const adjustedProgress = Math.max(0, Math.min(1, progress + offset))
     
-    // Opacity and transform based on progress
-    const opacity = Math.max(0, Math.min(1, adjustedProgress * 1.2 - 0.2)) // Fade in faster
-    const translateY = (1 - adjustedProgress) * 50 // Move from 50px below to 0
+    // More dramatic fade-in effect: increased translate distance and smoother fade
+    const opacity = Math.max(0, Math.min(1, adjustedProgress * 1.5 - 0.3)) // More dramatic fade
+    const translateY = (1 - adjustedProgress) * 80 // Increased from 50px to 80px for more movement
     
     return {
       opacity,
       transform: `translateY(${translateY}px)`,
-      transition: 'opacity 0.1s ease-out, transform 0.1s ease-out'
+      transition: 'opacity 0.15s ease-out, transform 0.15s ease-out'
     }
   }
 
