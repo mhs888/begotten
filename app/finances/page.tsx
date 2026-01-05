@@ -9,6 +9,7 @@ import RetirementTimeline from '@/components/RetirementTimeline'
 import FinancialDataInput from '@/components/FinancialDataInput'
 import NetWorthProjector from '@/components/NetWorthProjector'
 import ExposureForecast from '@/components/ExposureForecast'
+import { calculateTaxes } from '@/lib/taxCalculator'
 
 export interface FinancialData {
   // Income
@@ -52,9 +53,21 @@ export interface FinancialData {
   }
 }
 
+// Calculate after-tax income from $250k gross (married filing jointly, CT residency)
+const grossAnnualIncome = 250000
+const taxResult = calculateTaxes(grossAnnualIncome)
+const netAnnualIncome = taxResult.netIncome
+// Split proportionally based on original 150k/80k split (60%/32% of 250k, with remainder)
+// Using 150k/80k = 65.2%/34.8% split of net income
+const userGross = 150000
+const spouseGross = 80000
+const totalOriginal = userGross + spouseGross
+const userNet = (userGross / totalOriginal) * netAnnualIncome
+const spouseNet = (spouseGross / totalOriginal) * netAnnualIncome
+
 const defaultData: FinancialData = {
-  monthlyIncome: 12500, // 150k annual
-  spouseMonthlyIncome: 6666.67, // 80k annual
+  monthlyIncome: userNet / 12, // After-tax from 150k gross
+  spouseMonthlyIncome: spouseNet / 12, // After-tax from 80k gross
   savings: 682558, // Checking (360k) + Money market/EJ standard cash (202,558) + Spouse checking/savings (120k)
   investments: 965510, // EJ Standard stocks/bonds (363,440) + EJ Guided stocks/bonds (162,070) + Taxable stocks (320k) + Spouse mutual fund (120k)
   retirementAccounts: 209000, // Your 401k (109k) + Spouse Traditional 401k (70k) + Spouse Roth IRA (30k) - assume 80% stocks, 20% bonds

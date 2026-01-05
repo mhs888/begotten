@@ -30,22 +30,20 @@ export default function PurposePage() {
             </p>
             
             <p className="text-lg text-gray-700 leading-relaxed mb-6">
-              Every garment we create is crafted with intention and quality, but our true purpose extends 
-              far beyond fashion. We believe that business can be a force for good—a means to provide 
-              for those who need it most, without seeking personal gain.
+              We make quality clothing, but that's not why we exist. This is about using what we have 
+              to help those who don't. Every sale moves us closer to that goal.
             </p>
 
             <p className="text-lg text-gray-700 leading-relaxed mb-6">
               <strong className="text-black">100% of our profits go directly to charitable causes.</strong> 
-              This isn't a marketing slogan—it's our foundational principle. We operate at cost, ensuring 
-              that every dollar beyond what's needed to sustain our operations goes to organizations and 
-              individuals making a real difference in the world.
+              Our foundational principle is to operate at cost, ensuring that every dollar beyond what's 
+              needed to sustain our operations goes to organizations and individuals making a difference 
+              in the world.
             </p>
 
             <p className="text-lg text-gray-700 leading-relaxed">
-              When you purchase from Begotten, you're not just buying clothing. You're participating in 
-              a mission to serve others, to extend God's love through action, and to create a sustainable 
-              model of giving that can continue to make an impact for years to come.
+              When you purchase from Begotten, you are participating in a mission to serve others and extend 
+              God's love through action.
             </p>
           </div>
         </div>

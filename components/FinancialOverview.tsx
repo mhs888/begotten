@@ -38,7 +38,7 @@ export default function FinancialOverview({
     {
       title: 'Monthly Income',
       value: formatCurrency(monthlyIncome),
-      subtitle: 'Combined household income',
+      subtitle: 'After-tax household income',
       color: 'text-blue-400',
       bgColor: 'bg-gray-800',
       borderColor: 'border-gray-700',
