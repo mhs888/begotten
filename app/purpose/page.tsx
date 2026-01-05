@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
-import { fetchProducts } from '@/lib/shopify'
 
 export default function PurposePage() {
   const [images, setImages] = useState<string[]>([])
@@ -16,14 +15,14 @@ export default function PurposePage() {
     // Add your images to: /public/purpose-scroll/ folder
     // Name them: image1.jpg, image2.jpg, image3.jpg, etc.
     const localImages = [
-      '/purpose-scroll/image1.jpg',
-      '/purpose-scroll/image2.jpg',
-      '/purpose-scroll/image3.jpg',
-      '/purpose-scroll/image4.jpg',
-      '/purpose-scroll/image5.jpg',
-      '/purpose-scroll/image6.jpg',
-      '/purpose-scroll/image7.jpg',
-      '/purpose-scroll/image8.jpg',
+      '/purpose-scroll/image1.png',
+      '/purpose-scroll/image2.png',
+      '/purpose-scroll/image3.png',
+      '/purpose-scroll/image4.png',
+      '/purpose-scroll/image5.png',
+      '/purpose-scroll/image6.png',
+      '/purpose-scroll/image7.png',
+      '/purpose-scroll/image8.png',
     ]
     
     // Filter out images that don't exist (will be handled by Image component error handling)
