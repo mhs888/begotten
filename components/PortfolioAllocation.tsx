@@ -63,8 +63,8 @@ export default function PortfolioAllocation({
     .filter(item => item.value > 0)
     .sort((a, b) => b.value - a.value) // Sort descending by value
 
-  const getPercentage = (value: number) => {
-    if (totalAssets === 0) return 0
+  const getPercentage = (value: number): string => {
+    if (totalAssets === 0) return '0'
     return ((value / totalAssets) * 100).toFixed(1)
   }
 

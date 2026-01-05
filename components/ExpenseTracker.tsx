@@ -36,8 +36,8 @@ export default function ExpenseTracker({ expenses }: ExpenseTrackerProps) {
 
   const totalExpenses = Object.values(expenses).reduce((sum, val) => sum + val, 0)
 
-  const getPercentage = (value: number) => {
-    if (totalExpenses === 0) return 0
+  const getPercentage = (value: number): string => {
+    if (totalExpenses === 0) return '0'
     return ((value / totalExpenses) * 100).toFixed(1)
   }
 
@@ -53,7 +53,7 @@ export default function ExpenseTracker({ expenses }: ExpenseTrackerProps) {
         <>
           <div className="space-y-4 mb-6">
             {expenseCategories.map((category) => {
-              const amount = expenses[category.key as keyof typeof expenses]
+              const amount = expenses[category.key as keyof typeof expenses] ?? 0
               const percentage = parseFloat(getPercentage(amount))
               
               return (
